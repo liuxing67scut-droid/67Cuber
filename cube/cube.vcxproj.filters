@@ -13,123 +13,165 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\App">
+      <UniqueIdentifier>{2E45F2C8-25FE-43E4-BB2F-EF1C4D1B9D7A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Game">
+      <UniqueIdentifier>{7B0F9376-4B77-42F2-B7B1-C77E7A9B0A3B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Game\Play">
+      <UniqueIdentifier>{1C0E540B-4E9F-4AE2-96B1-3F0365B05D9A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Game\PlayModes">
+      <UniqueIdentifier>{2166969E-B932-4A0E-A20A-9872A988977B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Core">
+      <UniqueIdentifier>{32AFB33B-F8E7-4CB4-84DA-89AEBE6FBEBF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\UI">
+      <UniqueIdentifier>{8D78C5E3-40D1-4A8A-8329-5277C9C87D90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Services">
+      <UniqueIdentifier>{0F5B9453-BEE7-4C60-BE49-F79428DC781A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\App">
+      <UniqueIdentifier>{7D63026A-EA50-40FC-89E7-D9FC81004565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Game">
+      <UniqueIdentifier>{F74370F6-3B5F-4D26-B20F-2604E044990E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Core">
+      <UniqueIdentifier>{74DDA99C-8064-4F70-9C3A-47D5AE0AA236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\UI">
+      <UniqueIdentifier>{5A2235E1-0E40-466D-96E1-95C7EE116F54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Services">
+      <UniqueIdentifier>{2B2C65F8-1C91-4319-8D49-5815101A06B1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="app_paths.cpp">
+      <Filter>源文件\Services</Filter>
+    </ClCompile>
     <ClCompile Include="cube.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Core</Filter>
     </ClCompile>
     <ClCompile Include="cubesolver.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Core</Filter>
     </ClCompile>
     <ClCompile Include="game.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game</Filter>
     </ClCompile>
     <ClCompile Include="game_menu_page.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game</Filter>
     </ClCompile>
     <ClCompile Include="game_play_input.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game\Play</Filter>
     </ClCompile>
     <ClCompile Include="game_play_mode_auto.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game\PlayModes</Filter>
     </ClCompile>
     <ClCompile Include="game_play_mode_practice.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game\PlayModes</Filter>
     </ClCompile>
     <ClCompile Include="game_play_mode_teach.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game\PlayModes</Filter>
     </ClCompile>
     <ClCompile Include="game_play_page.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game\Play</Filter>
     </ClCompile>
     <ClCompile Include="game_play_runtime.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game\Play</Filter>
     </ClCompile>
     <ClCompile Include="game_play_session.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game\Play</Filter>
     </ClCompile>
     <ClCompile Include="game_select_page.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game</Filter>
     </ClCompile>
     <ClCompile Include="game_ui_setup.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Game</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\App</Filter>
     </ClCompile>
     <ClCompile Include="plane.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Core</Filter>
     </ClCompile>
     <ClCompile Include="point.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Core</Filter>
     </ClCompile>
     <ClCompile Include="rubikcube.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Core</Filter>
     </ClCompile>
     <ClCompile Include="utils.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Services</Filter>
     </ClCompile>
     <ClCompile Include="ui.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\UI</Filter>
     </ClCompile>
     <ClCompile Include="music.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Services</Filter>
     </ClCompile>
     <ClCompile Include="timer.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Services</Filter>
     </ClCompile>
     <ClCompile Include="recordfile.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Services</Filter>
     </ClCompile>
     <ClCompile Include="user.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Services</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="app_paths.h">
+      <Filter>头文件\Services</Filter>
+    </ClInclude>
     <ClInclude Include="common.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Services</Filter>
     </ClInclude>
     <ClInclude Include="cube.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Core</Filter>
     </ClInclude>
     <ClInclude Include="cubesolver.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Core</Filter>
     </ClInclude>
     <ClInclude Include="game.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\App</Filter>
     </ClInclude>
     <ClInclude Include="game_internal.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Game</Filter>
     </ClInclude>
     <ClInclude Include="game_state.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Game</Filter>
     </ClInclude>
     <ClInclude Include="plane.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Core</Filter>
     </ClInclude>
     <ClInclude Include="point.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Core</Filter>
     </ClInclude>
     <ClInclude Include="rubikcube.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Core</Filter>
     </ClInclude>
     <ClInclude Include="utils.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Services</Filter>
     </ClInclude>
     <ClInclude Include="ui.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\UI</Filter>
     </ClInclude>
     <ClInclude Include="music.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Services</Filter>
     </ClInclude>
     <ClInclude Include="timer.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Services</Filter>
     </ClInclude>
     <ClInclude Include="recordfile.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Services</Filter>
     </ClInclude>
     <ClInclude Include="user.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Services</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

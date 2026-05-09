@@ -1,5 +1,6 @@
 
 #include "recordfile.h"
+#include "app_paths.h"
 #include <fstream>
 #include <sstream>
 #include <iomanip>
@@ -8,22 +9,21 @@
 
 #include <algorithm>//sort需要
 
-// 文件名 全局变量
-const string FILENAME = "record.csv";
 
 // ---------------------------------------------------------
 // 0. 初始化文件
 // ---------------------------------------------------------
 void initRecordFile() {
+    const string fileName = getRecordFilePath();
     // 尝试以只读方式打开
-    ifstream inFile(FILENAME);
+    ifstream inFile(fileName);
     if (!inFile) {
         // 文件不存在，创建一个空文件
-        ofstream outFile(FILENAME);
+        ofstream outFile(fileName);
         //写入表头
         outFile << "Username,Time,DateTime" << endl;
         outFile.close();
-        cout << "已创建成绩文件: " << FILENAME << endl;
+        cout << "已创建成绩文件: " << fileName << endl;
     }
     else {
         inFile.close();
@@ -56,8 +56,9 @@ string getCurrentTimeStr() {
 // 2. 保存成绩
 // ---------------------------------------------------------
 void saveScore(string name, double time_sec) {
+    const string fileName = getRecordFilePath();
     // 打开文件：ios::app 表示追加
-    ofstream outFile(FILENAME, ios::out | ios::app);
+    ofstream outFile(fileName, ios::out | ios::app);
 
     if (!outFile.is_open()) {
         cout << "错误：无法打开文件保存成绩" << endl;
@@ -78,7 +79,7 @@ void saveScore(string name, double time_sec) {
 // ---------------------------------------------------------
 vector<UserScore> getAllScores() {
     vector<UserScore> result;
-    ifstream inFile(FILENAME);
+    ifstream inFile(getRecordFilePath());
 
     if (!inFile.is_open()) {
         return result;

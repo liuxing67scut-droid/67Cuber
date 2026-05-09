@@ -1,4 +1,5 @@
 #include "music.h"
+#include "app_paths.h"
 
 #include <windows.h>
 #include <mmsystem.h>
@@ -6,16 +7,12 @@
 
 #pragma comment(lib, "winmm.lib")
 
-static const char* MUSIC_PATH = "C:/Users/17646/Desktop/cube_v1/cube/music/minecraft.mp3";
-static const char* CLICK_SOUND_PATH = "C:/Users/17646/Desktop/cube_v1/cube/music/click.mp3";
-static const char* CUBE_SOUND_PATH = "C:/Users/17646/Desktop/cube_v1/cube/music/cube.mp3";
-
 static bool g_musicEnabled = true;
 static bool g_soundEnabled = true;
 static bool g_musicPlaying = false;
 
 static void playBackgroundMusic() {
-    std::string openCmd = "open \"" + std::string(MUSIC_PATH) + "\" type mpegvideo alias bgm";
+    std::string openCmd = "open \"" + getMusicPath("minecraft.mp3") + "\" type mpegvideo alias bgm";
     mciSendStringA("close bgm", NULL, 0, NULL);
     mciSendStringA(openCmd.c_str(), NULL, 0, NULL);
     mciSendStringA("play bgm repeat", NULL, 0, NULL);
@@ -62,7 +59,7 @@ void playClickSound() {
     if (!g_soundEnabled) return;
 
     mciSendStringA("close click", NULL, 0, NULL);
-    mciSendStringA(("open \"" + std::string(CLICK_SOUND_PATH) + "\" type mpegvideo alias click").c_str(), NULL, 0, NULL);
+    mciSendStringA(("open \"" + getMusicPath("click.mp3") + "\" type mpegvideo alias click").c_str(), NULL, 0, NULL);
     mciSendStringA("play click from 0", NULL, 0, NULL);
 }
 
@@ -70,7 +67,7 @@ void playCubeSound() {
     if (!g_soundEnabled) return;
 
     mciSendStringA("close cube", NULL, 0, NULL);
-    std::string openCmd = "open \"" + std::string(CUBE_SOUND_PATH) + "\" type mpegvideo alias cube";
+    std::string openCmd = "open \"" + getMusicPath("cube.mp3") + "\" type mpegvideo alias cube";
     mciSendStringA(openCmd.c_str(), NULL, 0, NULL);
     mciSendStringA("play cube from 0", NULL, 0, NULL);
 }

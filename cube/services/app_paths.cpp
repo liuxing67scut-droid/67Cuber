@@ -112,5 +112,5 @@ std::string getMusicPath(const std::string& fileName) {
 }
 
 std::string getRecordFilePath() {
-    return joinPath(joinPath(g_appRootPath, "cube"), "record.csv");
+    return joinPath(joinPath(joinPath(g_appRootPath, "cube"), "data"), "record.csv");
 }

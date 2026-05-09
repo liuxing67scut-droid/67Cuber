@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)app;$(ProjectDir)game;$(ProjectDir)game\play;$(ProjectDir)game\play_modes;$(ProjectDir)core;$(ProjectDir)ui;$(ProjectDir)services;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)app;$(ProjectDir)game;$(ProjectDir)game\play;$(ProjectDir)game\play_modes;$(ProjectDir)core;$(ProjectDir)ui;$(ProjectDir)services;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)app;$(ProjectDir)game;$(ProjectDir)game\play;$(ProjectDir)game\play_modes;$(ProjectDir)core;$(ProjectDir)ui;$(ProjectDir)services;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)app;$(ProjectDir)game;$(ProjectDir)game\play;$(ProjectDir)game\play_modes;$(ProjectDir)core;$(ProjectDir)ui;$(ProjectDir)services;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,50 +127,51 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="app_paths.cpp" />
-    <ClCompile Include="cube.cpp" />
-    <ClCompile Include="cubesolver.cpp" />
-    <ClCompile Include="game.cpp" />
-    <ClCompile Include="game_menu_page.cpp" />
-    <ClCompile Include="game_play_input.cpp" />
-    <ClCompile Include="game_play_mode_auto.cpp" />
-    <ClCompile Include="game_play_mode_practice.cpp" />
-    <ClCompile Include="game_play_mode_teach.cpp" />
-    <ClCompile Include="game_play_page.cpp" />
-    <ClCompile Include="game_play_runtime.cpp" />
-    <ClCompile Include="game_play_session.cpp" />
-    <ClCompile Include="game_select_page.cpp" />
-    <ClCompile Include="game_ui_setup.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="music.cpp" />
-    <ClCompile Include="plane.cpp" />
-    <ClCompile Include="point.cpp" />
-    <ClCompile Include="recordfile.cpp" />
-    <ClCompile Include="rubikcube.cpp" />
-    <ClCompile Include="timer.cpp" />
-    <ClCompile Include="ui.cpp" />
-    <ClCompile Include="user.cpp" />
-    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="services\app_paths.cpp" />
+    <ClCompile Include="core\cube.cpp" />
+    <ClCompile Include="core\cubesolver.cpp" />
+    <ClCompile Include="game\game.cpp" />
+    <ClCompile Include="game\game_menu_page.cpp" />
+    <ClCompile Include="game\play\game_play_input.cpp" />
+    <ClCompile Include="game\play_modes\game_play_mode_auto.cpp" />
+    <ClCompile Include="game\play_modes\game_play_mode_practice.cpp" />
+    <ClCompile Include="game\play_modes\game_play_mode_teach.cpp" />
+    <ClCompile Include="game\play\game_play_page.cpp" />
+    <ClCompile Include="game\play\game_play_runtime.cpp" />
+    <ClCompile Include="game\play\game_play_session.cpp" />
+    <ClCompile Include="game\game_select_page.cpp" />
+    <ClCompile Include="game\game_ui_setup.cpp" />
+    <ClCompile Include="app\main.cpp" />
+    <ClCompile Include="services\music.cpp" />
+    <ClCompile Include="core\plane.cpp" />
+    <ClCompile Include="core\point.cpp" />
+    <ClCompile Include="services\recordfile.cpp" />
+    <ClCompile Include="core\rubikcube.cpp" />
+    <ClCompile Include="services\timer.cpp" />
+    <ClCompile Include="ui\ui.cpp" />
+    <ClCompile Include="services\user.cpp" />
+    <ClCompile Include="services\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app_paths.h" />
-    <ClInclude Include="common.h" />
-    <ClInclude Include="cube.h" />
-    <ClInclude Include="cubesolver.h" />
-    <ClInclude Include="game.h" />
-    <ClInclude Include="game_internal.h" />
-    <ClInclude Include="game_state.h" />
-    <ClInclude Include="music.h" />
-    <ClInclude Include="plane.h" />
-    <ClInclude Include="point.h" />
-    <ClInclude Include="recordfile.h" />
-    <ClInclude Include="rubikcube.h" />
-    <ClInclude Include="timer.h" />
-    <ClInclude Include="ui.h" />
-    <ClInclude Include="user.h" />
-    <ClInclude Include="utils.h" />
+    <ClInclude Include="services\app_paths.h" />
+    <ClInclude Include="core\common.h" />
+    <ClInclude Include="core\cube.h" />
+    <ClInclude Include="core\cubesolver.h" />
+    <ClInclude Include="game\game.h" />
+    <ClInclude Include="game\game_internal.h" />
+    <ClInclude Include="game\game_state.h" />
+    <ClInclude Include="services\music.h" />
+    <ClInclude Include="core\plane.h" />
+    <ClInclude Include="core\point.h" />
+    <ClInclude Include="services\recordfile.h" />
+    <ClInclude Include="core\rubikcube.h" />
+    <ClInclude Include="services\timer.h" />
+    <ClInclude Include="ui\ui.h" />
+    <ClInclude Include="services\user.h" />
+    <ClInclude Include="services\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
+

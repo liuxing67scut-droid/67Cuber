@@ -1,4 +1,4 @@
-#include "CubeSolver.h"
+#include "cubesolver.h"
 #include <map>
 #include <sstream>
 

@@ -21,7 +21,7 @@ void handleMenuPage();
 void handleSelectPage(MainViewState& viewState);
 bool handleGamePage(MainViewState& viewState);
 
-//局状态
+//游戏会话状态
 void clearTeachSelection(MainViewState& viewState);
 void rebuildCubeForMode(PlayMode mode);
 void resetRuntimeAfterCubeRebuild(MainViewState& viewState, bool resetTeachModeRunOnce);

@@ -1,5 +1,6 @@
 ﻿#include "game_internal.h"
 
+//清除教学模式中的贴纸选择和颜色面板
 void clearTeachSelection(MainViewState& viewState) {
 	RubikCube*& pRubikcube = g_app.pRubikcube;
 	viewState.teachPanel.hide();
@@ -12,6 +13,7 @@ void clearTeachSelection(MainViewState& viewState) {
 	viewState.sel_p = -1;
 }
 
+//按目标模式重建魔方模型和逻辑状态
 void rebuildCubeForMode(PlayMode mode) {
 	RubikCube*& pRubikcube = g_app.pRubikcube;
 	char(&Cube)[6][3][3] = g_app.Cube;
@@ -44,6 +46,7 @@ void rebuildCubeForMode(PlayMode mode) {
 	pRubikcube->rotateY(-30.0);
 }
 
+//重建魔方后重置计时、自转、公式面板等运行状态
 void resetRuntimeAfterCubeRebuild(MainViewState& viewState, bool resetTeachModeRunOnce) {
 	Axis3D& autoRotateAxis = g_app.autoRotateAxis;
 	bool& isRestored = g_app.isRestored;
@@ -78,6 +81,7 @@ void resetRuntimeAfterCubeRebuild(MainViewState& viewState, bool resetTeachModeR
 	}
 }
 
+//切换游戏模式，并重建对应模式的魔方状态
 void switchToMode(PlayMode mode, MainViewState& viewState, const char* popupText) {
 	PlayMode& currentMode = g_app.currentMode;
 	MOUSEMSG& msg = g_app.msg;

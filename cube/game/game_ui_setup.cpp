@@ -1,5 +1,6 @@
 ﻿#include "game_internal.h"
 
+//配置开始菜单按钮
 static void initMenuButtons() {
 	Button& btnGuestEnter = g_ui.menu.guestEnter;
 	Button& btnUserLogin = g_ui.menu.userLogin;
@@ -11,6 +12,7 @@ static void initMenuButtons() {
 	btnUserLogin.setText("用户登录");
 }
 
+//配置魔方选择页按钮
 static void initSelectButtons() {
 	Button& btn3x3 = g_ui.select.cube3x3;
 	Button& btn2x2 = g_ui.select.cube2x2;
@@ -26,6 +28,7 @@ static void initSelectButtons() {
 	btnBack.setText("< 返回");
 }
 
+//配置跨页面浮层按钮
 static void initOverlayButtons() {
 	Button& btnRankList = g_ui.overlay.rankList;
 	Button& btnSettings = g_ui.overlay.settings;
@@ -41,6 +44,7 @@ static void initOverlayButtons() {
 	btnSettings.setText("设置");
 }
 
+//配置游戏页各模式按钮
 static void initPlayButtons() {
 	Button& btnBack = g_ui.playCommon.back;
 
@@ -92,6 +96,7 @@ static void initPlayButtons() {
 	btnModeTeach.setText("教学模式");
 }
 
+//统一初始化所有按钮布局
 void initButtons() {
 	initMenuButtons();
 	initSelectButtons();
@@ -99,6 +104,7 @@ void initButtons() {
 	initPlayButtons();
 }
 
+//离开游戏页时收起浮层和模式面板，避免残留显示
 void syncUiPanelsForCurrentState(MainViewState& viewState) {
 	GameState& state = g_app.state;
 	FormulaPanel& formulaPanel = viewState.formulaPanel;

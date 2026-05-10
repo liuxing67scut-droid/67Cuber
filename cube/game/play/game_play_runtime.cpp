@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+//算法执行完成后停止计时并保存成绩
 static void handleAlgorithmSolveCompletion() {
 	bool& isSolving = g_app.isSolving;
 	bool& isRestored = g_app.isRestored;
@@ -12,7 +13,7 @@ static void handleAlgorithmSolveCompletion() {
 	if (isSolving && pRubikcube->isExecuteOver()) {
 		if (solvedByAlgo) {
 			solveTimer.stop();
-			drawPopup("Solved!", 1500);
+			drawPopup("还原成功！", 1500);
 			double pcRecord = solveTimer.elapsed();
 			saveScore("PC", pcRecord);
 
@@ -30,6 +31,7 @@ static void handleAlgorithmSolveCompletion() {
 	}
 }
 
+//绘制计时器和弹窗提示
 static void drawGameHud() {
 	SolveTimer& solveTimer = g_app.solveTimer;
 
@@ -42,6 +44,7 @@ static void drawGameHud() {
 	showPopupIfNeeded();
 }
 
+//处理顶部模式切换按钮
 static void handleModeTabButtons(MainViewState& viewState) {
 	PlayMode& currentMode = g_app.currentMode;
 	MOUSEMSG& msg = g_app.msg;
@@ -54,18 +57,19 @@ static void handleModeTabButtons(MainViewState& viewState) {
 	bool teachClicked = btnModeTeach.draw(msg);
 
 	if (autoClicked && currentMode != PLAY_MODE_AUTO) {
-		switchToMode(PLAY_MODE_AUTO, viewState, "Auto mode");
+		switchToMode(PLAY_MODE_AUTO, viewState, "切换至自动模式");
 	}
 
 	if (practiceClicked && currentMode != PLAY_MODE_PRACTICE) {
-		switchToMode(PLAY_MODE_PRACTICE, viewState, "Practice mode");
+		switchToMode(PLAY_MODE_PRACTICE, viewState, "切换至练习模式");
 	}
 
 	if (teachClicked && currentMode != PLAY_MODE_TEACH) {
-		switchToMode(PLAY_MODE_TEACH, viewState, "Teach mode");
+		switchToMode(PLAY_MODE_TEACH, viewState, "切换至教学模式");
 	}
 }
 
+//高亮当前游戏模式
 static void drawCurrentModeTabHighlight() {
 	PlayMode& currentMode = g_app.currentMode;
 
@@ -76,6 +80,7 @@ static void drawCurrentModeTabHighlight() {
 	if (currentMode == PLAY_MODE_TEACH) roundrect(MODE_START_X + (MODE_BTN_W + MODE_GAP) * 2, MODE_Y, MODE_START_X + (MODE_BTN_W + MODE_GAP) * 2 + MODE_BTN_W, MODE_Y + MODE_BTN_H, 8, 8);
 }
 
+//处理设置面板和排行榜面板
 static void handleOverlayPanels() {
 	MOUSEMSG& msg = g_app.msg;
 	SettingsPanel& settingsPanel = g_ui.settingsPanel;
@@ -92,12 +97,13 @@ static void handleOverlayPanels() {
 		if (rankPanel.draw(msg)) {
 			rankPanel.hide();
 		}
-		if (msg.uMsg == WM_LBUTTONDOWN) {
+		if (msg.uMsg == WM_LBUTTONDOWN || msg.uMsg == WM_MOUSEWHEEL) {
 			msg.uMsg = 0;
 		}
 	}
 }
 
+//更新自转、执行动画并绘制魔方场景
 void updateAndDrawGameScene(MainViewState& viewState, bool userInteracted) {
 	PlayMode& currentMode = g_app.currentMode;
 	RubikCube*& pRubikcube = g_app.pRubikcube;
@@ -147,6 +153,7 @@ void updateAndDrawGameScene(MainViewState& viewState, bool userInteracted) {
 	}
 }
 
+//场景绘制后处理模式面板、完成判定和浮层
 void handleGameRuntimeUi(MainViewState& viewState) {
 	handleTeachModePickInput(viewState);
 	handlePracticeModeCompletion(viewState);

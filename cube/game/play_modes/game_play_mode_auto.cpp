@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+//绘制自动模式的打乱、还原、复位按钮
 void drawAutoModeControls(GameControlState& controlState) {
 	MOUSEMSG& msg = g_app.msg;
 	Button& btnRand = g_ui.playAuto.rand;
@@ -13,6 +14,7 @@ void drawAutoModeControls(GameControlState& controlState) {
 	controlState.btnResetClicked = btnReset.draw(msg);
 }
 
+//处理自动打乱和算法还原
 void handleAutoModeActions(MainViewState& viewState, const GameControlState& controlState) {
 	bool& isSolving = g_app.isSolving;
 	bool& isRestored = g_app.isRestored;
@@ -45,7 +47,7 @@ void handleAutoModeActions(MainViewState& viewState, const GameControlState& con
 	if (controlState.btnSolveClicked) {
 		if (pRubikcube->isExecuteOver()) {
 			if (isCubeSolved(Cube)) {
-				drawPopup("Already solved", 1500);
+				drawPopup("已复位", 1500);
 				isRestored = true;
 			}
 			else {

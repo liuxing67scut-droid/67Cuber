@@ -1,5 +1,6 @@
 ﻿#include "game_internal.h"
 
+//绘制游戏页所有模式共用的返回按钮
 static void drawSharedGameControls(GameControlState& controlState) {
 	MOUSEMSG& msg = g_app.msg;
 	Button& btnBack = g_ui.playCommon.back;
@@ -8,6 +9,7 @@ static void drawSharedGameControls(GameControlState& controlState) {
 	controlState.btnBackClicked = btnBack.draw(msg);
 }
 
+//绘制设置、排行榜和当前用户等浮层入口
 static void drawOverlayControls() {
 	MOUSEMSG& msg = g_app.msg;
 	Button& btnSettings = g_ui.overlay.settings;
@@ -25,6 +27,7 @@ static void drawOverlayControls() {
 			settingsPanel.hide();
 		}
 		else {
+			rankPanel.hide();
 			int btnR_X = Width - 120;
 			int btnR_Y = 60;
 			int btnW = 80, btnH = 30;
@@ -36,11 +39,13 @@ static void drawOverlayControls() {
 	}
 
 	if (btnRankClick) {
+		settingsPanel.hide();
 		rankPanel.show(Width, Height);
 	}
 	drawCurrentUser(Width);
 }
 
+//处理复位和返回等所有模式共用的按钮行为
 static bool handleSharedGameActions(MainViewState& viewState, const GameControlState& controlState) {
 	PlayMode& currentMode = g_app.currentMode;
 	GameState& state = g_app.state;
@@ -50,7 +55,7 @@ static bool handleSharedGameActions(MainViewState& viewState, const GameControlS
 	if (controlState.btnResetClicked) {
 		rebuildCubeForMode(currentMode);
 		resetRuntimeAfterCubeRebuild(viewState, true);
-		drawPopup("Reset complete", 1500);
+		drawPopup("复位完成", 1500);
 	}
 
 	if (controlState.btnBackClicked) {
@@ -64,6 +69,7 @@ static bool handleSharedGameActions(MainViewState& viewState, const GameControlS
 	return true;
 }
 
+//处理鼠标拖拽旋转视角
 bool processGameCameraInput(MainViewState& viewState) {
 	RubikCube*& pRubikcube = g_app.pRubikcube;
 	bool userInteracted = false;
@@ -90,6 +96,7 @@ bool processGameCameraInput(MainViewState& viewState) {
 	return userInteracted;
 }
 
+//按当前模式绘制对应按钮，并记录本帧点击结果
 void drawGamePageControls(MainViewState& viewState, GameControlState& controlState) {
 	PlayMode& currentMode = g_app.currentMode;
 	drawSharedGameControls(controlState);
@@ -107,6 +114,7 @@ void drawGamePageControls(MainViewState& viewState, GameControlState& controlSta
 	drawOverlayControls();
 }
 
+//按当前模式分发按钮行为，再处理共用行为
 bool handleGameControlActions(MainViewState& viewState, const GameControlState& controlState) {
 	PlayMode& currentMode = g_app.currentMode;
 	if (currentMode == PLAY_MODE_AUTO) {

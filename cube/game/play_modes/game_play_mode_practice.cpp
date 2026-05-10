@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+//绘制练习模式按钮，并控制公式面板显示
 void drawPracticeModeControls(MainViewState& viewState, GameControlState& controlState) {
 	MOUSEMSG& msg = g_app.msg;
 	FormulaPanel& formulaPanel = viewState.formulaPanel;
@@ -22,6 +23,7 @@ void drawPracticeModeControls(MainViewState& viewState, GameControlState& contro
 	}
 }
 
+//处理练习模式随机打乱
 void handlePracticeModeActions(MainViewState& viewState, const GameControlState& controlState) {
 	bool& isSolving = g_app.isSolving;
 	bool& isRestored = g_app.isRestored;
@@ -52,6 +54,7 @@ void handlePracticeModeActions(MainViewState& viewState, const GameControlState&
 	}
 }
 
+//检测手动复原完成并保存用户成绩
 void handlePracticeModeCompletion(MainViewState& viewState) {
 	PlayMode& currentMode = g_app.currentMode;
 	bool& isSolving = g_app.isSolving;
@@ -64,7 +67,7 @@ void handlePracticeModeCompletion(MainViewState& viewState) {
 	if (currentMode == PLAY_MODE_PRACTICE && !isSolving && pRubikcube->isExecuteOver() && solveTimer.isRunning()) {
 		if (isCubeSolved(Cube)) {
 			solveTimer.stop();
-			drawPopup("Manual solve!", 1500);
+			drawPopup("手动还原成功！", 1500);
 			if (!isGuest()) {
 				double userRecord = solveTimer.elapsed();
 				saveScore(getCurrentUser().c_str(), userRecord);
@@ -76,6 +79,7 @@ void handlePracticeModeCompletion(MainViewState& viewState) {
 	}
 }
 
+//处理公式面板点击，并同步逻辑魔方和动画命令
 void handlePracticeFormulaExecution(MainViewState& viewState) {
 	PlayMode& currentMode = g_app.currentMode;
 	MOUSEMSG& msg = g_app.msg;

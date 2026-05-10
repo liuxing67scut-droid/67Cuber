@@ -23,6 +23,9 @@ void saveScore(string name, double time_sec);
 vector<UserScore> getAllScores();
 string getCurrentTimeStr();
 
+//排行榜按用时升序返回全部成绩
+vector<UserScore> getSortedScores();
+
 //排行榜按用时升序返回前 topN 名
 vector<UserScore> getSortedTopScores(int topN = 10);
 bool compareScore(const UserScore& a, const UserScore& b);

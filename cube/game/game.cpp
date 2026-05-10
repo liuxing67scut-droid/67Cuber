@@ -7,9 +7,9 @@ GameUiState g_ui;
 GameAppState g_app;
 MainViewState g_viewState;
 
+//初始化路径、窗口、音频和按钮等基础环境
 void initGameApp(const char* exePath) {
 	initAppPaths(exePath);
-	//初始化窗口和基础环境
 	initMusic();
 	initgraph(Width, Height);
 	initRecordFile();
@@ -19,6 +19,7 @@ void initGameApp(const char* exePath) {
 	initButtons();
 }
 
+//单帧调度入口，根据当前页面状态分发到具体页面
 void runGameApp() {
 	GameState& state = g_app.state;
 	MOUSEMSG& msg = g_app.msg;
@@ -32,17 +33,12 @@ void runGameApp() {
 	g_viewState.btnTestSolveClicked = false;
 	syncUiPanelsForCurrentState(g_viewState);
 
-	//按页面分发：
-
-	//开始菜单页
 	if (state == STATE_MENU) {
 		handleMenuPage();
 	}
-	//选择魔方页
 	else if (state == STATE_SELECT) {
 		handleSelectPage(g_viewState);
 	}
-	//3阶魔方页
 	else if (state == STATE_GAME_3x3) {
 		if (!handleGamePage(g_viewState)) {
 			return;
@@ -56,6 +52,7 @@ void runGameApp() {
 	}
 }
 
+//释放图形窗口和魔方对象
 void closeGameApp() {
 	RubikCube*& pRubikcube = g_app.pRubikcube;
 	if (pRubikcube) {

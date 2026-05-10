@@ -94,7 +94,7 @@ bool compareScore(const UserScore& a, const UserScore& b) {
     return a.time < b.time;
 }
 
-vector<UserScore> getSortedTopScores(int topN) {
+vector<UserScore> getSortedScores() {
     vector<UserScore> allData = getAllScores();
 
     if (allData.empty()) {
@@ -102,6 +102,11 @@ vector<UserScore> getSortedTopScores(int topN) {
     }
 
     sort(allData.begin(), allData.end(), compareScore);
+    return allData;
+}
+
+vector<UserScore> getSortedTopScores(int topN) {
+    vector<UserScore> allData = getSortedScores();
 
     vector<UserScore> result;
     int count = min((int)allData.size(), topN);

@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+//选择魔方页，负责进入3阶游戏并初始化默认运行状态
 void handleSelectPage(MainViewState& viewState) {
 	PlayMode& currentMode = g_app.currentMode;
 	GameState& state = g_app.state;
@@ -25,7 +26,6 @@ void handleSelectPage(MainViewState& viewState) {
 	setbkcolor(UIConfig::COL_BG);
 	drawTitle(150, "选择魔方");
 
-	//进入3阶游戏
 	if (btn3x3.draw(msg)) {
 		std::cout << "3x3" << std::endl;
 
@@ -46,7 +46,6 @@ void handleSelectPage(MainViewState& viewState) {
 			solveTimer.reset();
 		}
 		
-		//默认进入自动模式
 		currentMode = PLAY_MODE_AUTO;
 		
 		if (formulaPanel.isVisible()) {
@@ -57,7 +56,7 @@ void handleSelectPage(MainViewState& viewState) {
 		msg = {};
 	}
 
-	//其余入口暂留
+	//2阶入口暂留
 	btn2x2.draw(msg);
 	if (btnBack.draw(msg)) {
 		state = STATE_MENU;

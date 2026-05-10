@@ -24,13 +24,16 @@
 
 using namespace std;
 
+//窗口和基础数学常量
 #define Width 1440
 #define Height 900
-#define PI 3.1415926535898	//魔方旋转角度相关
+#define PI 3.1415926535898
 #define GetKey(X) (GetAsyncKeyState(X) & 0x8000)
 
+//透视投影使用的观察点和远端参考面
 const int Watcher_x = 1000, Back_wall_x = -100;
 
+//魔方旋转方向
 enum Dir :int {
 	Left, Front, Right, Back, Up, Down, Still
 };

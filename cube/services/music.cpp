@@ -11,6 +11,7 @@ static bool g_musicEnabled = true;
 static bool g_soundEnabled = true;
 static bool g_musicPlaying = false;
 
+//使用 MCI 循环播放背景音乐
 static void playBackgroundMusic() {
     std::string openCmd = "open \"" + getMusicPath("minecraft.mp3") + "\" type mpegvideo alias bgm";
     mciSendStringA("close bgm", NULL, 0, NULL);
@@ -27,6 +28,7 @@ bool isSoundEnabled() {
     return g_soundEnabled;
 }
 
+//设置背景音乐开关，并立即同步播放状态
 void setMusicEnabled(bool enabled) {
     g_musicEnabled = enabled;
     if (g_musicEnabled) {
@@ -43,18 +45,21 @@ void setSoundEnabled(bool enabled) {
     g_soundEnabled = enabled;
 }
 
+//启动时根据开关状态播放背景音乐
 void initMusic() {
     if (g_musicEnabled) {
         playBackgroundMusic();
     }
 }
 
+//停止并关闭背景音乐别名
 void stopMusic() {
     mciSendStringA("stop bgm", NULL, 0, NULL);
     mciSendStringA("close bgm", NULL, 0, NULL);
     g_musicPlaying = false;
 }
 
+//播放按钮点击音效
 void playClickSound() {
     if (!g_soundEnabled) return;
 
@@ -63,6 +68,7 @@ void playClickSound() {
     mciSendStringA("play click from 0", NULL, 0, NULL);
 }
 
+//播放魔方转动音效
 void playCubeSound() {
     if (!g_soundEnabled) return;
 

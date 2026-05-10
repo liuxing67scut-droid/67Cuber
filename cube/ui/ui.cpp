@@ -24,6 +24,7 @@ bool Button::contains(int x, int y) const {
     return x >= m_x && x <= m_x + m_w && y >= m_y && y <= m_y + m_h;
 }
 
+//绘制按钮并返回本帧是否点击
 bool Button::draw(MOUSEMSG msg) {
     m_isHover = contains(msg.x, msg.y);
 
@@ -48,6 +49,7 @@ bool Button::draw(MOUSEMSG msg) {
     return false;
 }
 
+//绘制居中标题
 void drawTitle(int y, const std::string& text, int size) {
     settextcolor(UIConfig::COL_TITLE);
     settextstyle(size, 0, _T("微软雅黑"));
@@ -65,12 +67,14 @@ static clock_t popupStart = 0;
 static int popupDuration = 0;
 static std::string popupText;
 
+//记录需要短暂显示的弹窗文本
 void drawPopup(const std::string& text, int durationMs) {
     popupText = text;
     popupDuration = durationMs;
     popupStart = clock();
 }
 
+//按持续时间绘制弹窗提示
 void showPopupIfNeeded() {
     if (!popupText.empty()) {
         int elapsed = (int)(clock() - popupStart) * 1000 / CLOCKS_PER_SEC;
@@ -100,10 +104,11 @@ void showPopupIfNeeded() {
 }
 
 
-RankPanel::RankPanel() : _visible(false), _x(0), _y(0), _w(420), _h(480) {}
+RankPanel::RankPanel() : _visible(false), _x(0), _y(0), _w(460), _h(540), _scrollOffset(0) {}
 
 void RankPanel::show(int screenWidth, int screenHeight) {
     _visible = true;
+    _scrollOffset = 0;
     _x = (screenWidth - _w) / 2;
     _y = (screenHeight - _h) / 2;
 }
@@ -116,6 +121,7 @@ bool RankPanel::isVisible() const {
     return _visible;
 }
 
+//绘制排行榜面板，并返回是否点击关闭按钮
 bool RankPanel::draw(MOUSEMSG msg) {
     if (!_visible) return false;
 
@@ -131,37 +137,72 @@ bool RankPanel::draw(MOUSEMSG msg) {
 
     bool shouldClose = false;
 
+    const int panelPadding = 32;
     setfillcolor(RGB(28, 28, 28));
-    setlinecolor(RGB(220, 220, 220));
-    setlinestyle(PS_SOLID, 2);
-    fillrectangle(_x, _y, _x + _w, _y + _h);
+    setlinecolor(RGB(185, 185, 185));
+    setlinestyle(PS_SOLID, 1);
+    fillroundrect(_x, _y, _x + _w, _y + _h, 14, 14);
 
     setbkmode(TRANSPARENT);
     settextcolor(WHITE);
-    settextstyle(32, 0, _T("微软雅黑"));
+    settextstyle(30, 0, _T("微软雅黑"));
     TCHAR title[] = _T("排行榜");
     int tw = textwidth(title);
-    outtextxy(_x + (_w - tw) / 2, _y + 25, title);
+    outtextxy(_x + (_w - tw) / 2, _y + 30, title);
 
-    int closeX = _x + _w - 35;
-    int closeY = _y + 15;
+    int closeSize = 28;
+    int closeX = _x + _w - panelPadding - closeSize;
+    int closeY = _y + 22;
+    bool closeHover = msg.x >= closeX && msg.x <= closeX + closeSize &&
+        msg.y >= closeY && msg.y <= closeY + closeSize;
+
+    setfillcolor(closeHover ? RGB(70, 38, 38) : RGB(36, 36, 36));
+    setlinecolor(closeHover ? RGB(255, 110, 110) : RGB(210, 80, 80));
+    fillroundrect(closeX, closeY, closeX + closeSize, closeY + closeSize, 8, 8);
+
     settextcolor(RGB(255, 80, 80));
-    settextstyle(24, 0, _T("微软雅黑"));
-    outtextxy(closeX, closeY, _T("X"));
+    settextstyle(20, 0, _T("微软雅黑"));
+    TCHAR closeText[] = _T("X");
+    int closeTextW = textwidth(closeText);
+    int closeTextH = textheight(closeText);
+    outtextxy(closeX + (closeSize - closeTextW) / 2, closeY + (closeSize - closeTextH) / 2, closeText);
 
     if (msg.uMsg == WM_LBUTTONDOWN) {
-        if (msg.x >= closeX && msg.x <= closeX + 25 &&
-            msg.y >= closeY && msg.y <= closeY + 25) {
+        if (closeHover) {
             playClickSound();
             shouldClose = true;
         }
     }
 
-    int tableY = _y + 85;
-    int col1 = _x + 30;
-    int col2 = _x + 100;
-    int col3 = _x + 230;
-    int col4 = _x + 310;
+    vector<UserScore> scores = getSortedScores();
+    const int visibleRows = 10;
+    const int scrollStep = 3;
+    int maxOffset = (int)scores.size() - visibleRows;
+    if (maxOffset < 0) {
+        maxOffset = 0;
+    }
+
+    if (msg.uMsg == WM_MOUSEWHEEL && maxOffset > 0) {
+        if (msg.wheel > 0) {
+            _scrollOffset -= scrollStep;
+        }
+        else if (msg.wheel < 0) {
+            _scrollOffset += scrollStep;
+        }
+
+        if (_scrollOffset < 0) {
+            _scrollOffset = 0;
+        }
+        if (_scrollOffset > maxOffset) {
+            _scrollOffset = maxOffset;
+        }
+    }
+
+    int tableY = _y + 98;
+    int col1 = _x + panelPadding + 5;
+    int col2 = _x + 115;
+    int col3 = _x + 275;
+    int col4 = _x + 350;
 
     settextcolor(RGB(160, 160, 160));
     settextstyle(20, 0, _T("微软雅黑"));
@@ -170,14 +211,17 @@ bool RankPanel::draw(MOUSEMSG msg) {
     outtextxy(col3, tableY, _T("用时"));
     outtextxy(col4, tableY, _T("日期"));
 
-    setlinecolor(RGB(80, 80, 80));
-    line(_x + 15, tableY + 28, _x + _w - 15, tableY + 28);
+    setlinecolor(RGB(90, 90, 90));
+    line(_x + panelPadding, tableY + 28, _x + _w - panelPadding, tableY + 28);
 
-    vector<UserScore> scores = getSortedTopScores(10);
     int rowY = tableY + 40;
     int rowH = 36;
+    int endIndex = _scrollOffset + visibleRows;
+    if (endIndex > (int)scores.size()) {
+        endIndex = (int)scores.size();
+    }
 
-    for (int i = 0; i < scores.size() && i < 10; i++) {
+    for (int i = _scrollOffset; i < endIndex; i++) {
         if (i == 0) settextcolor(RGB(255, 215, 0));
         else if (i == 1) settextcolor(RGB(192, 192, 192));
         else if (i == 2) settextcolor(RGB(205, 127, 50));
@@ -218,6 +262,38 @@ bool RankPanel::draw(MOUSEMSG msg) {
         rowY += rowH;
     }
 
+    settextstyle(18, 0, _T("微软雅黑"));
+    settextcolor(RGB(135, 135, 135));
+    TCHAR pageText[64];
+    if (scores.empty()) {
+        _stprintf_s(pageText, _T("暂无成绩"));
+    }
+    else if (maxOffset == 0) {
+        _stprintf_s(pageText, _T("共 %d 条成绩"), (int)scores.size());
+    }
+    else {
+        _stprintf_s(pageText, _T("%d-%d / %d  滚轮查看更多"),
+            _scrollOffset + 1, endIndex, (int)scores.size());
+    }
+    outtextxy(_x + panelPadding, _y + _h - 36, pageText);
+
+    if (maxOffset > 0) {
+        int barX = _x + _w - 18;
+        int barTop = tableY + 40;
+        int barBottom = _y + _h - 52;
+        int trackH = barBottom - barTop;
+        int thumbH = trackH * visibleRows / (int)scores.size();
+        if (thumbH < 28) {
+            thumbH = 28;
+        }
+        int thumbY = barTop + (_scrollOffset * (trackH - thumbH) / maxOffset);
+
+        setlinecolor(RGB(75, 75, 75));
+        line(barX, barTop, barX, barBottom);
+        setfillcolor(RGB(135, 135, 135));
+        fillroundrect(barX - 3, thumbY, barX + 3, thumbY + thumbH, 4, 4);
+    }
+
     setfillcolor(saveFillColor);
     settextcolor(saveTextColor);
     setlinecolor(saveLineColor);
@@ -245,6 +321,7 @@ bool LoginPanel::isVisible() const {
     return _visible;
 }
 
+//绘制登录面板并处理确认、取消和输入框点击
 bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
     if (!_visible) return false;
 
@@ -332,6 +409,7 @@ bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
     return confirmed;
 }
 
+//处理登录输入框的字符输入
 void LoginPanel::handleCharInput(char ch) {
     if (!_visible || !_isInputActive) return;
 
@@ -375,6 +453,7 @@ bool SettingsPanel::isAutoRotateOn() const {
     return _autoRotateOn;
 }
 
+//绘制设置面板并同步音乐、音效开关
 bool SettingsPanel::draw(MOUSEMSG msg) {
     if (!_visible) return false;
 
@@ -489,6 +568,7 @@ std::string FormulaPanel::getClickedFormula() const { return m_lastClicked; }
 void FormulaPanel::resetHover() { for (auto& key : m_keys) key.isHover = false; }
 bool FormulaPanel::isAxesOn() const { return m_axesOn; }
 
+//绘制公式按钮和坐标轴开关
 void FormulaPanel::draw(MOUSEMSG msg) {
     m_lastClicked = "";
     if (!m_visible) return;
@@ -534,7 +614,7 @@ void FormulaPanel::draw(MOUSEMSG msg) {
     fillroundrect(bx, by, bx + btnW, by + btnH, 6, 6);
     settextcolor(RGB(220, 220, 220));
     settextstyle(20, 0, _T("微软雅黑"));
-    std::string label = m_axesOn ? "坐标轴:            开" : "坐标轴:            关";
+    std::string label = m_axesOn ? "坐标轴:                 开" : "坐标轴:                 关";
     int tw = textwidth(label.c_str());
     int th = textheight(label.c_str());
     outtextxy(sx + 8, sy + (sh - th) / 2, label.c_str());
@@ -563,6 +643,7 @@ void TeachColorPanel::hide() { m_visible = false; }
 bool TeachColorPanel::isVisible() const { return m_visible; }
 char TeachColorPanel::getClickedColor() const { return m_lastClicked; }
 
+//绘制教学模式颜色选择面板
 void TeachColorPanel::draw(MOUSEMSG msg) {
     m_lastClicked = 0;
     if (!m_visible) return;

@@ -12,6 +12,7 @@
 #include "recordfile.h"
 #include "user.h"
 
+//集中保存所有按钮和跨页面面板对象
 struct GameUiState {
 	struct MenuButtons {
 		Button guestEnter;
@@ -62,12 +63,14 @@ struct GameUiState {
 	SettingsPanel settingsPanel;
 };
 
+//游戏页内部模式
 enum PlayMode {
 	PLAY_MODE_AUTO = 0,
 	PLAY_MODE_PRACTICE = 1,
 	PLAY_MODE_TEACH = 2
 };
 
+//影响游戏运行和魔方逻辑的共享状态
 struct GameAppState {
 	GameState state = STATE_MENU;
 	MOUSEMSG msg = { 0 };
@@ -87,6 +90,7 @@ struct GameAppState {
 	Axis3D autoRotateAxis = { 1.0 / sqrt(3), 1.0 / sqrt(3), 1.0 / sqrt(3) };
 };
 
+//只和当前视图交互有关的状态
 struct MainViewState {
 	POINT org = { 0, 0 };
 	POINT now = { 0, 0 };
@@ -107,6 +111,7 @@ struct MainViewState {
 	}
 };
 
+//游戏页顶部模式按钮和自转参数
 static const double AUTO_ROTATE_MAX_SPEED = 8.0;
 static const double AUTO_ROTATE_ACCEL_TIME = 2.0;
 static const int MODE_BTN_W = 180;

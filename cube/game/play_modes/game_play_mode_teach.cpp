@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+//绘制教学模式按钮
 void drawTeachModeControls(MainViewState& viewState, GameControlState& controlState) {
 	MOUSEMSG& msg = g_app.msg;
 	Button& btnTestSolve = g_ui.playTeach.testSolve;
@@ -13,6 +14,7 @@ void drawTeachModeControls(MainViewState& viewState, GameControlState& controlSt
 	controlState.btnResetClicked = btnReset.draw(msg);
 }
 
+//处理教学模式录入后的检测和算法还原
 void handleTeachModeActions(MainViewState& viewState, const GameControlState& controlState) {
 	bool& isSolving = g_app.isSolving;
 	bool& isRestored = g_app.isRestored;
@@ -28,7 +30,7 @@ void handleTeachModeActions(MainViewState& viewState, const GameControlState& co
 		if (isSolving || !pRubikcube->isExecuteOver()) {
 		}
 		else if (teachModeHasRunOnce) {
-			drawPopup("Please reset first", 1500);
+			drawPopup("请先复位", 1500);
 		}
 		else {
 			bool incomplete = false;
@@ -44,10 +46,10 @@ void handleTeachModeActions(MainViewState& viewState, const GameControlState& co
 			}
 
 			if (incomplete) {
-				drawPopup("Coloring incomplete", 1500);
+				drawPopup("填色不全，无法复原", 1500);
 			}
 			else if (isCubeSolved(Cube)) {
-				drawPopup("Already solved", 1500);
+				drawPopup("已复位", 1500);
 				isRestored = true;
 			}
 			else {
@@ -78,10 +80,11 @@ void handleTeachModeActions(MainViewState& viewState, const GameControlState& co
 	}
 
 	if (controlState.btnTeachStepClicked) {
-		drawPopup("Teach mode TBD", 1500);
+		drawPopup("详细教学敬请期待", 1500);
 	}
 }
 
+//处理右键选择贴纸，并弹出颜色选择面板
 void handleTeachModePickInput(MainViewState& viewState) {
 	PlayMode& currentMode = g_app.currentMode;
 	MOUSEMSG& msg = g_app.msg;
@@ -107,7 +110,7 @@ void handleTeachModePickInput(MainViewState& viewState) {
 				isCenter = true;
 			}
 			if (isCenter) {
-				drawPopup("Center locked", 1000);
+				drawPopup("中心块不可修改", 1000);
 				pRubikcube->clearAllHighlights();
 			}
 			else {
@@ -136,6 +139,7 @@ void handleTeachModePickInput(MainViewState& viewState) {
 	}
 }
 
+//处理颜色面板点击，并写回可视贴纸和逻辑魔方
 void handleTeachPanelInteraction(MainViewState& viewState) {
 	MOUSEMSG& msg = g_app.msg;
 	RubikCube*& pRubikcube = g_app.pRubikcube;
@@ -153,7 +157,7 @@ void handleTeachPanelInteraction(MainViewState& viewState) {
 
 		if (chosen != 0) {
 			if (teachModeHasRunOnce) {
-				drawPopup("Please reset first", 1500);
+				drawPopup("请先复位", 1500);
 				clearTeachSelection(viewState);
 			}
 			else if (sel_k != -1 && pRubikcube && pRubikcube->isExecuteOver()) {

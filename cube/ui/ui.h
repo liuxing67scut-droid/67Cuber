@@ -58,6 +58,7 @@ public:
 private:
     bool _visible;
     int _x, _y, _w, _h;
+    int _scrollOffset;
 };
 
 //登录面板

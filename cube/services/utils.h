@@ -1,19 +1,17 @@
-#pragma once
+ï»¿#pragma once
 #include "common.h"
 
 void initWinPos_Title(string Title, string newTitle = "");
 
-
 string getPathName(string path);
 
-
-//ËÙ¶ÈÇúÏß
+//é€Ÿåº¦æ›²çº¿
 double smoothS(double t, double T);
 
-// 3DÖá½á¹¹Ìå
+//3Dè½´ç»“æ„ä½“
 struct Axis3D {
     double x, y, z;
 };
 
-// Éú³ÉËæ»úµ¥Î»ÖáµÄº¯ÊıÉùÃ÷
+//ç”Ÿæˆéšæœºå•ä½è½´
 Axis3D randomUnitAxis();

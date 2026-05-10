@@ -1,4 +1,4 @@
-#include "game_internal.h"
+﻿#include "game_internal.h"
 
 static void drawSharedGameControls(GameControlState& controlState) {
 	MOUSEMSG& msg = g_app.msg;

@@ -1,44 +1,28 @@
-#pragma once
+ï»¿#pragma once
 
 #include <string>
 #include <vector>
 
 using namespace std;
 
-// µ¥Ìõ³É¼¨¼ÇÂ¼Àà
+//å•æ¡æˆç»©è®°å½•
 class UserScore {
 public:
-    string username;   // ÓÃ»§Ãû (»ò "PC")
-    double time;       // »¹Ô­ÓÃÊ± (Ãë)
-    string datetime;   // ¼ÇÂ¼Ê±¼ä
+    string username;
+    double time;
+    string datetime;
 
-    // ¹¹Ôìº¯Êı
     UserScore(string name, double t, string dt)
         : username(name), time(t), datetime(dt) {
     }
 };
 
-// ==========================================
-// È«¾Öº¯ÊıÉùÃ÷
-// ==========================================
-
-// 1. ³õÊ¼»¯£ºÈ·±£ÎÄ¼ş´æÔÚ£¬Èç¹û²»´æÔÚÔò´´½¨¿ÕÎÄ¼ş
+//æˆç»©æ–‡ä»¶æ“ä½œ
 void initRecordFile();
-
-// 2. ±£´æÒ»Ìõ³É¼¨
-// ²ÎÊı: name - ÓÃ»§Ãû, time_sec - ÓÃÊ±
 void saveScore(string name, double time_sec);
-
-// 3. ¶ÁÈ¡ËùÓĞ³É¼¨
-// ·µ»Ø: °üº¬ËùÓĞ³É¼¨µÄ vector
 vector<UserScore> getAllScores();
-
-// 4. »ñÈ¡µ±Ç°Ê±¼ä×Ö·û´® (ÄÚ²¿¸¨Öú£¬µ«Ò²¿ÉÒÔ¹«¿ª)
 string getCurrentTimeStr();
 
-// 4. »ñÈ¡ÅÅĞòºóµÄÅÅĞĞ°ñ (°´Ê±¼ä´ÓĞ¡µ½´ó£¬È¡Ç° topN Ãû)
-// ²ÎÊı: topN - È¡Ç°¼¸Ãû£¬Ä¬ÈÏ 10
+//æ’è¡Œæ¦œæŒ‰ç”¨æ—¶å‡åºè¿”å›å‰ topN å
 vector<UserScore> getSortedTopScores(int topN = 10);
-
-// 5. (¸¨Öú) ±È½Ïº¯Êı£¬ÓÃÓÚÅÅĞò
 bool compareScore(const UserScore& a, const UserScore& b);

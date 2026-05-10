@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #define _CRT_SECURE_NO_WARNINGS
 #pragma warning(disable:6031)
@@ -26,7 +26,7 @@ using namespace std;
 
 #define Width 1440
 #define Height 900
-#define PI 3.1415926535898	//Ä§·½Ðý×ª½Ç¶ÈÏà¹Ø
+#define PI 3.1415926535898	//é­”æ–¹æ—‹è½¬è§’åº¦ç›¸å…³
 #define GetKey(X) (GetAsyncKeyState(X) & 0x8000)
 
 const int Watcher_x = 1000, Back_wall_x = -100;

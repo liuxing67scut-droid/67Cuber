@@ -1,20 +1,22 @@
-#pragma once
+ï»¿#pragma once
 
 #include "common.h"
 
-// È«¾Ö±äÁ¿ÉùÃ÷ (¶¨ÒåÔÚ cubesolver.cpp ÖĞ)
+//æ±‚è§£æ¨¡å—å…±äº«çŠ¶æ€ï¼Œå®šä¹‰åœ¨ cubesolver.cpp
 extern const int F, B, L, R, U, D;
 extern const char Color[6];
 extern string Command;
 extern int step;
 extern bool isSrand;
 
-
+//åŸºç¡€çŠ¶æ€å’Œéšæœºæ‰“ä¹±
 void init(char cube[][3][3]);
 void random(char cube[][3][3], int N);
-// Á·Ï°Ä£Ê½×¨ÓÃËæ»ú£º²»°üº¬Õû¿é×ª¶¯£¨turn/Fturn£©£¬±ÜÃâ¸Ä±äÊÓ½ÇÓ³Éä
+//ç»ƒä¹ æ¨¡å¼éšæœºåªè½¬å•é¢ï¼Œé¿å…æ”¹å˜è§†è§’æ˜ å°„
 void random_practice(char cube[][3][3], int N);
 void setColor(unsigned short ForeColor, unsigned short BackGroundColor);
+
+//åŸºç¡€è½¬åŠ¨
 void rotate(char cube[][3][3], int mode, int direct);
 void front(char cube[][3][3], int mode);
 void left(char cube[][3][3], int mode);
@@ -26,6 +28,7 @@ void move(char cube[][3][3], const char* com);
 void turn(char cube[][3][3]);
 void Fturn(char cube[][3][3]);
 
+//åˆ†å±‚æ±‚è§£æ­¥éª¤
 void DownCross(char cube[][3][3]);
 void DownMid(char cube[][3][3]);
 void DownCorner(char cube[][3][3]);
@@ -37,14 +40,13 @@ void TopCorner(char cube[][3][3]);
 void TopLayerCorner(char cube[][3][3]);
 void TopEdge(char cube[][3][3]);
 
-void Solute(char cube[][3][3]);//!!Bug:turn Ö®ºó Fturn·½Ïò¸Ä±ä Í¬ÀíFturn Ö®ºó turn·½Ïò¸Ä±ä!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//ç”Ÿæˆè¿˜åŸå‘½ä»¤å¹¶æ›´æ–° cube çŠ¶æ€
+//æ±‚è§£è¿‡ç¨‹åŒ…å«æ•´å—è½¬åŠ¨ï¼Œè°ƒæ•´ turn/Fturn æ—¶éœ€åŒæ­¥éªŒè¯åŠ¨ç”»æ˜ å°„
+void Solute(char cube[][3][3]);
 
-
-
-
-// ĞÂÔö£ºÑéÖ¤×ÅÉ«ÊÇ·ñºÏ·¨£¨·µ»Ø false ²¢Í¨¹ı reason ËµÃ÷Ô­Òò£©
+//æ•™å­¦æ¨¡å¼å½•å…¥ç»“æœçš„åŸºæœ¬åˆæ³•æ€§æ£€æŸ¥
 bool validateColoring(const char cube[6][3][3], string &reason);
 
-//²¹³ä
+//åˆ¤æ–­å½“å‰é€»è¾‘é­”æ–¹æ˜¯å¦å·²ç»å¤åŸ
 bool isCubeSolved(const char Cube[6][3][3]);
 

@@ -1,29 +1,19 @@
-#include "cubesolver.h"
+ï»¿#include "cubesolver.h"
 #include <map>
 #include <sstream>
 
-// Ï°¹ß£º
-// R: ÓÒÃæ (Right) - ºìÉ«
-// L: ×óÃæ (Left) - ³ÈÉ«
-// U: ÉÏÃæ (Up) - »ÆÉ«
-// D: ÏÂÃæ (Down) - °×É«
-// F: Ç°Ãæ (Front) - ÂÌÉ«
-// B: ºóÃæ (Back) - À¶É«
-// 0:Front 1:Left 2:Up 3:Down 4:Right 5:Back
+//é¢ç¼–å·å’Œé¢œè‰²çº¦å®šï¼Œéœ€å’Œå¯è§†é­”æ–¹é¢œè‰²ä¿æŒä¸€è‡´
+//Fç»¿ Læ©™ Ué»„ Dç™½ Rçº¢ Bè“
 const int F = 0, L = 1, U = 2, D = 3, R = 4, B = 5;
 const char Color[6] = { 'G','O','Y','W','R','B' };
 string Command;
 int step = 0;
 bool isSrand = 0;
 
-
-
-
-
 void init(char cube[][3][3])
 {
 	Command = "";
-	for (int i = 0; i < 6; i++)//initialize
+	for (int i = 0; i < 6; i++)
 		for (int j = 0; j < 3; j++)
 			for (int k = 0; k < 3; k++)
 				cube[i][j][k] = Color[i];
@@ -67,14 +57,15 @@ void random(char cube[][3][3], int N)
 	}
 
 }
-// Á·Ï°Ä£Ê½×¨ÓÃËæ»ú£º²»°üº¬Õû¿é×ª¶¯£¨turn/Fturn£©£¬±ÜÃâ¸Ä±äÊÓ½ÇÓ³Éä
+
+//ç»ƒä¹ æ¨¡å¼éšæœºåªè½¬å•é¢ï¼Œé¿å…æ”¹å˜è§†è§’æ˜ å°„
 void random_practice(char cube[][3][3], int N)
 {
 	if (!isSrand)
 		srand(static_cast<unsigned int>(time(nullptr))), isSrand = 1;
 	for (int i = 0; i < N; i++)
 	{
-		int rnd = rand() % 6; // only 0..5 -> face rotations
+		int rnd = rand() % 6;
 		int rmod = (rand() % 2) * 2 - 1;
 		switch (rnd)
 		{
@@ -102,12 +93,12 @@ void random_practice(char cube[][3][3], int N)
 }
 void setColor(unsigned short ForeColor, unsigned short BackGroundColor)
 {
-	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);//»ñÈ¡µ±Ç°´°¿Ú¾ä±ú
-	SetConsoleTextAttribute(handle, ForeColor + BackGroundColor * 0x10);//ÉèÖÃÑÕÉ«
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(handle, ForeColor + BackGroundColor * 0x10);
 }
 void rotate(char cube[][3][3], int mode, int direct)
 {
-	char tCube[3][3];//front
+	char tCube[3][3];
 	memcpy(tCube, cube[direct], sizeof(tCube));
 	if (mode != 1 && mode != -1)
 		exit(-1);
@@ -117,9 +108,8 @@ void rotate(char cube[][3][3], int mode, int direct)
 }
 void front(char cube[][3][3], int mode)
 {
-	//mode == 1 ? printf("F") : printf("F\'"); step++;
 	mode == 1 ? Command += "F " : Command += "F' "; step++;
-	rotate(cube, mode, F);//ÄÚ²ã¼ì²âmodeºÏ·¨ĞÔ
+	rotate(cube, mode, F);
 	char rSide, dSide;
 	if (mode == 1)
 		for (int i = 0; i < 3; i++)
@@ -142,9 +132,8 @@ void front(char cube[][3][3], int mode)
 }
 void left(char cube[][3][3], int mode)
 {
-	//mode == 1 ? printf("L") : printf("L\'"); step++;
 	mode == 1 ? Command += "L " : Command += "L' "; step++;
-	rotate(cube, mode, L);//ÄÚ²ã¼ì²âmodeºÏ·¨ĞÔ
+	rotate(cube, mode, L);
 	char fSide, dSide;
 	if (mode == 1)
 		for (int i = 0; i < 3; i++)
@@ -167,9 +156,8 @@ void left(char cube[][3][3], int mode)
 }
 void right(char cube[][3][3], int mode)
 {
-	//mode == 1 ? printf("R") : printf("R\'"); step++;
 	mode == 1 ? Command += "R " : Command += "R' "; step++;
-	rotate(cube, mode, R);//ÄÚ²ã¼ì²âmodeºÏ·¨ĞÔ
+	rotate(cube, mode, R);
 	char bSide, dSide;
 	if (mode == 1)
 		for (int i = 0; i < 3; i++)
@@ -192,9 +180,8 @@ void right(char cube[][3][3], int mode)
 }
 void back(char cube[][3][3], int mode)
 {
-	//mode == 1 ? printf("B") : printf("B\'"); step++;
 	mode == 1 ? Command += "B " : Command += "B' "; step++;
-	rotate(cube, mode, B);//ÄÚ²ã¼ì²âmodeºÏ·¨ĞÔ
+	rotate(cube, mode, B);
 	char lSide, dSide;
 	if (mode == 1)
 		for (int i = 0; i < 3; i++)
@@ -217,9 +204,8 @@ void back(char cube[][3][3], int mode)
 }
 void up(char cube[][3][3], int mode)
 {
-	//mode == 1 ? printf("U") : printf("U\'"); step++;
 	mode == 1 ? Command += "U " : Command += "U' "; step++;
-	rotate(cube, mode, U);//ÄÚ²ã¼ì²âmodeºÏ·¨ĞÔ
+	rotate(cube, mode, U);
 	char rSide, fSide;
 	if (mode == 1)
 		for (int i = 0; i < 3; i++)
@@ -242,9 +228,8 @@ void up(char cube[][3][3], int mode)
 }
 void down(char cube[][3][3], int mode)
 {
-	//mode == 1 ? printf("D") : printf("D\'"); step++;
 	mode == 1 ? Command += "D " : Command += "D' "; step++;
-	rotate(cube, mode, D);//ÄÚ²ã¼ì²âmodeºÏ·¨ĞÔ
+	rotate(cube, mode, D);
 	char rSide, bSide;
 	if (mode == 1)
 		for (int i = 0; i < 3; i++)
@@ -265,7 +250,7 @@ void down(char cube[][3][3], int mode)
 			cube[R][2][i] = bSide;
 		}
 }
-void move(char cube[][3][3], const char* com)//"FRUR'U'F'"
+void move(char cube[][3][3], const char* com)
 {
 	int m = 0;
 	while (com[m] != '\0')
@@ -302,8 +287,7 @@ void move(char cube[][3][3], const char* com)//"FRUR'U'F'"
 }
 void turn(char cube[][3][3])
 {
-	//printf("¡ú");
-	Command += "¡ú ";
+	Command += "â†’ ";
 	rotate(cube, 1, F);
 	rotate(cube, -1, B);
 	char rSide;
@@ -319,8 +303,7 @@ void turn(char cube[][3][3])
 }
 void Fturn(char cube[][3][3])
 {
-	//printf("¡ı");
-	Command += "¡ı ";
+	Command += "â†“ ";
 	rotate(cube, 1, L);
 	rotate(cube, -1, R);
 	char fSide;
@@ -336,8 +319,8 @@ void Fturn(char cube[][3][3])
 }
 void DownCross(char cube[][3][3])
 {
-	const char std = cube[F][1][1];//standard color(central color)
-	while (cube[F][0][1] != std || cube[F][1][0] != std || cube[F][2][1] != std || cube[F][1][2] != std)//not cross
+	const char std = cube[F][1][1];
+	while (cube[F][0][1] != std || cube[F][1][0] != std || cube[F][2][1] != std || cube[F][1][2] != std)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -400,13 +383,13 @@ void DownCorner(char cube[][3][3])
 	char* Uc = &cube[U][1][1], * Rc = &cube[R][1][1];
 	char* Ur = &cube[U][0][2], * Bul = &cube[B][0][0];
 	char* Ru = &cube[R][0][2];
-	for (int i = 0; i < 4; i++)//ÕûÌåÏòÓÒĞı×ªºóÖ´ĞĞÖØ¸´²Ù×÷¼´¿É!!!!!!!!!!!!!!!!!!!!!
+	for (int i = 0; i < 4; i++)
 	{
 		if ((cube[F][0][2] != std || cube[U][2][2] != *Uc || cube[R][0][0] != *Rc) && (cube[F][0][2] == std || cube[U][2][2] == std || cube[R][0][0] == std))
 		{
 			while (*Ur == std || *Ru == std || *Bul == std)
 				back(cube, 1);
-			move(cube, "RBR'");//¸ù¾İ³¯Ïò¸Ä¹«Ê½!!!!!!!!!!!!!
+			move(cube, "RBR'");
 		}
 		turn(cube);
 	}
@@ -429,12 +412,12 @@ void DownCorner(char cube[][3][3])
 		turn(cube);
 	}
 }
-void MidEdge(char cube[][3][3])//¸ù¾İ³¯Ïò¸Ä¹«Ê½!!!!!!!!!!!!!
+void MidEdge(char cube[][3][3])
 {
 	char Bc = cube[B][1][1];
 	for (int i = 0; i < 4; i++)
 	{
-		if ((cube[U][1][2] == cube[U][1][1] && cube[R][0][1] == cube[R][1][1]) || (cube[U][1][2] == Bc || cube[R][0][1] == Bc))//Correct || Bc
+		if ((cube[U][1][2] == cube[U][1][1] && cube[R][0][1] == cube[R][1][1]) || (cube[U][1][2] == Bc || cube[R][0][1] == Bc))
 		{
 			turn(cube);
 			continue;
@@ -448,12 +431,12 @@ void MidEdge(char cube[][3][3])//¸ù¾İ³¯Ïò¸Ä¹«Ê½!!!!!!!!!!!!!
 	char* Uc = &cube[U][1][1], * Rc = &cube[R][1][1], * Dc = &cube[D][1][1], * Lc = &cube[L][1][1];
 	for (int i = 0; i < 4; i++)
 	{
-		if ((cube[U][1][2] == *Uc && cube[R][0][1] == *Rc) && (cube[R][2][1] == *Rc && cube[D][1][2] == *Dc) && (cube[D][1][0] == *Dc && cube[L][2][1] == *Lc) && (cube[L][0][1] == *Lc && cube[U][1][0] == *Uc))//Correct
+		if ((cube[U][1][2] == *Uc && cube[R][0][1] == *Rc) && (cube[R][2][1] == *Rc && cube[D][1][2] == *Dc) && (cube[D][1][0] == *Dc && cube[L][2][1] == *Lc) && (cube[L][0][1] == *Lc && cube[U][1][0] == *Uc))
 			break;
 		while (cube[U][0][1] == Bc || cube[B][0][1] == Bc)
 			back(cube, 1);
 		while (cube[U][0][1] != *Uc)
-			turn(cube), back(cube, 1);//bug???
+			turn(cube), back(cube, 1);
 		if (cube[B][0][1] == *Lc)
 			turn(cube), move(cube, "R'U'RBRB'R'U");
 		else
@@ -518,7 +501,7 @@ void TopCorner(char cube[][3][3])
 	}
 	while (*ur != std)
 		front(cube, 1);
-	while (*ul != std || *ur != std || *dl != std || *dr != std)//??
+	while (*ul != std || *ur != std || *dl != std || *dr != std)
 		move(cube, "RF'F'R'F'RF'R'");
 }
 void TopLayerCorner(char cube[][3][3])
@@ -560,12 +543,9 @@ void Solute(char cube[][3][3])
 	TopEdge(cube);
 }
 
-
-
-
-// ĞÂÔö£ºÑéÖ¤×ÅÉ«ÊÇ·ñºÏ·¨£¨»ù±¾¼ì²é£º×Ö·ûºÏ·¨ĞÔ¡¢Ã¿ÖÖÑÕÉ«³öÏÖ9´Î¡¢ÖĞĞÄÑÕÉ«ÕıÈ·¡¢ÎŞ¿Õ¸ñ£©
-bool validateColoring(const char cube[6][3][3], string &reason) {
-	// count occurrences of allowed colors
+//æ•™å­¦æ¨¡å¼å½•å…¥ç»“æœçš„åŸºæœ¬åˆæ³•æ€§æ£€æŸ¥
+bool validateColoring(const char cube[6][3][3], string &reason)
+{
 	map<char, int> cnt;
 	for (int i = 0; i < 6; ++i) cnt[Color[i]] = 0;
 
@@ -574,11 +554,11 @@ bool validateColoring(const char cube[6][3][3], string &reason) {
 			for (int c = 0; c < 3; ++c) {
 				char ch = cube[f][r][c];
 				if (ch == ' ') {
-					reason = "´æÔÚÎ´ÉÏÉ«µÄÌùÖ½£¬ÎŞ·¨»¹Ô­";
+					reason = "å­˜åœ¨æœªä¸Šè‰²çš„è´´çº¸ï¼Œæ— æ³•è¿˜åŸ";
 					return false;
 				}
 				if (cnt.find(ch) == cnt.end()) {
-					ostringstream ss; ss << "´æÔÚ·Ç·¨ÑÕÉ«×Ö·û: '" << ch << "'";
+					ostringstream ss; ss << "å­˜åœ¨éæ³•é¢œè‰²å­—ç¬¦: '" << ch << "'";
 					reason = ss.str();
 					return false;
 				}
@@ -587,34 +567,32 @@ bool validateColoring(const char cube[6][3][3], string &reason) {
 		}
 	}
 
-	// each color must appear exactly 9 times
+	//æ¯ç§é¢œè‰²å¿…é¡»åˆšå¥½å‡ºç° 9 æ¬¡
 	for (int i = 0; i < 6; ++i) {
 		char ch = Color[i];
 		if (cnt[ch] != 9) {
-			ostringstream ss; ss << "ÑÕÉ« " << ch << " ³öÏÖ´ÎÊı²»Îª 9 (Êµ¼Ê " << cnt[ch] << ")£¬ÎŞ·¨»¹Ô­";
+			ostringstream ss; ss << "é¢œè‰² " << ch << " å‡ºç°æ¬¡æ•°ä¸ä¸º 9 (å®é™… " << cnt[ch] << ")ï¼Œæ— æ³•è¿˜åŸ";
 			reason = ss.str();
 			return false;
 		}
 	}
 
-	// centers must match standard center colors
+	//ä¸­å¿ƒå—é¢œè‰²å›ºå®šï¼Œç”¨äºä¿è¯é¢ç¼–å·æ²¡æœ‰å½•å
 	for (int f = 0; f < 6; ++f) {
 		if (cube[f][1][1] != Color[f]) {
-			ostringstream ss; ss << "µÚ " << f << " ÃæÖĞĞÄÑÕÉ«²»ÕıÈ·£¬ÎŞ·¨»¹Ô­";
+			ostringstream ss; ss << "ç¬¬ " << f << " é¢ä¸­å¿ƒé¢œè‰²ä¸æ­£ç¡®ï¼Œæ— æ³•è¿˜åŸ";
 			reason = ss.str();
 			return false;
 		}
 	}
 
-	// basic checks passed
 	reason = "";
 	return true;
 }
 
-
-//²¹³ä
-// ÅĞ¶ÏCubeÊı×éÊÇ·ñ¸´Ô­
-bool isCubeSolved(const char Cube[6][3][3]) {
+//åˆ¤æ–­å½“å‰é€»è¾‘é­”æ–¹æ˜¯å¦å·²ç»å¤åŸ
+bool isCubeSolved(const char Cube[6][3][3])
+{
 	for (int f = 0; f < 6; ++f)
 		for (int i = 0; i < 3; ++i)
 			for (int j = 0; j < 3; ++j)
@@ -622,10 +600,4 @@ bool isCubeSolved(const char Cube[6][3][3]) {
 					return false;
 	return true;
 }
-
-
-
-
-
-
 

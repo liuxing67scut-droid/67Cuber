@@ -1,4 +1,4 @@
-#include "game_internal.h"
+﻿#include "game_internal.h"
 
 #include <iostream>
 

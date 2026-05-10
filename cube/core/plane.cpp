@@ -1,15 +1,8 @@
-#include "plane.h"
+ï»¿#include "plane.h"
 
-// ---------------------------------------------------------
-// 1. ÊµÏÖ¹¹Ôìº¯Êı
-// ---------------------------------------------------------
 Plane::Plane(const Point* a, const Point* b, const Point* c, const Point* d) {
 	bindPoint(a, b, c, d);
 }
-
-// ---------------------------------------------------------
-// 2. ÊµÏÖ³ÉÔ±º¯Êı
-// ---------------------------------------------------------
 
 void Plane::bindPoint(const Point* a, const Point* b, const Point* c, const Point* d) {
 	p[0] = a, p[1] = b, p[2] = c, p[3] = d;
@@ -24,12 +17,12 @@ void Plane::setColor(COLORREF col) {
 }
 
 Point Plane::Center() const {
-	// p[0] p[2] Îª¶Ô½ÇÏß
+	//å¯¹è§’çº¿ä¸­ç‚¹åŠ å°æ–¹å—åç§»
 	Point center = (*p[0] + *p[2]) / 2;
 	return center + *offset;
 }
 
-// ½«Æ½Ãæ¶¥µãÍ¶Ó°µ½ÆÁÄ»£¬·µ»ØËÄ¸ö POINT
+//ç¼“å­˜æŠ•å½±åçš„å±å¹•å››è¾¹å½¢ï¼Œä¾›ç»˜åˆ¶å’Œæ‹¾å–å…±ç”¨
 void Plane::getScreenPolygon(POINT out[4], const Point* off) const {
 	out[0] = p[0]->trans(off);
 	out[1] = p[1]->trans(off);
@@ -38,7 +31,7 @@ void Plane::getScreenPolygon(POINT out[4], const Point* off) const {
 }
 
 static bool pointInPolygon(int x, int y, const POINT poly[], int n) {
-	// ÉäÏß·¨
+	//å°„çº¿æ³•åˆ¤æ–­ç‚¹æ˜¯å¦åœ¨å¤šè¾¹å½¢å†…
 	bool c = false;
 	for (int i = 0, j = n - 1; i < n; j = i++) {
 		int xi = poly[i].x, yi = poly[i].y;
@@ -61,11 +54,9 @@ void Plane::setHighlight(bool h) {
 }
 
 void Plane::draw() const {
-	// ÕâÀïÊ¹ÓÃÁË graphics.h µÄº¯Êı£¬È·±£ÄãµÄÏîÄ¿ÅäÖÃÕıÈ·
 	setfillcolor(color);
 	setlinecolor(RGB(100, 100, 100));
 
-	// ×¢Òâ£ºÕâÀïµÄ trans º¯Êı»áµ÷ÓÃ Point ÀïµÄÍ¸ÊÓ±ä»»
 	POINT point[4] = {
 		p[0]->trans(offset),
 		p[1]->trans(offset),
@@ -76,7 +67,7 @@ void Plane::draw() const {
 	fillpolygon(point, 4);
 
 	if (highlight) {
-		// »æÖÆ¼Ó´Ö±ß¿ò
+		//é«˜äº®é€‰ä¸­çš„é¢
 		setlinestyle(PS_SOLID, 3, NULL, 0);
 		setlinecolor(RGB(255, 255, 0));
 		for (int i = 0; i < 4; i++) {
@@ -88,12 +79,9 @@ void Plane::draw() const {
 	}
 }
 
-// ---------------------------------------------------------
-// 3. ÊµÏÖÈ«¾Ö±È½ÏÔËËã·û
-// ---------------------------------------------------------
 bool operator>(const Plane& a, const Plane& b) {
 	Point C_a = a.Center();
 	Point C_b = b.Center();
-	// DistToWatcher ÊÇÔÚ Point.h/Point.cpp ÖĞ¶¨ÒåµÄÈ«¾Öº¯Êı
+	//è·ç¦»è§‚å¯Ÿç‚¹è¶Šè¿œè¶Šå…ˆç»˜åˆ¶
 	return DistToWatcher(C_a) > DistToWatcher(C_b);
 }

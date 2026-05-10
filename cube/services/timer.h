@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <ctime>
 #include <string>
 
@@ -6,23 +6,23 @@ class Timer {
 public:
     Timer();
     void reset();
-    double elapsed() const; // ·µ»ØÃë
+    double elapsed() const;
 private:
     clock_t start;
 };
 
-// SolveTimer: ÓÃÓÚ¼ÇÂ¼Ò»´Î½âÄ§·½µÄ¼ÆÊ±£¨½çÃæÏÔÊ¾£©
+//ç”¨äºè®°å½•ä¸€æ¬¡è§£é­”æ–¹çš„è®¡æ—¶
 class SolveTimer {
 public:
     SolveTimer();
-    void start();    // ¿ªÊ¼¼ÆÊ±£¨Èç¹ûÒÑ¾­ÔÚ¼ÆÊ±Ôò¼ÌĞø£©
-    void stop();     // Í£Ö¹¼ÆÊ±£¨±£ÁôÒÑÓÃÊ±¼ä£©
-    void reset();    // ÖØÖÃÎª0£¨Í£Ö¹×´Ì¬£©
-    double elapsed() const; // ·µ»ØÃë
-    std::string format() const; // ·µ»Ø mm:ss.xx
+    void start();
+    void stop();
+    void reset();
+    double elapsed() const;
+    std::string format() const;
     bool isRunning() const;
 private:
-    double acc; // ÀÛ¼ÆÃëÊı
-    clock_t t0; // Æô¶¯Ê±¼äµã
+    double acc;
+    clock_t t0;
     bool running;
 };

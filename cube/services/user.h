@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 
 #include <string>
-#include <graphics.h> // ÓÃÓÚ»æÍ¼
+#include <graphics.h>
 using namespace std;
 
-// ÉèÖÃµ±Ç°ÓÃ»§
+//è®¾ç½®å½“å‰ç”¨æˆ·
 void setCurrentUser(const string& username);
 
-// »ñÈ¡µ±Ç°ÓÃ»§
+//è·å–å½“å‰ç”¨æˆ·
 string getCurrentUser();
 
-// ÔÚÓÒÉÏ½Ç»æÖÆµ±Ç°ÓÃ»§Ãû
+//åœ¨å³ä¸Šè§’ç»˜åˆ¶å½“å‰ç”¨æˆ·å
 void drawCurrentUser(int screenWidth);
 
-// ÅĞ¶Ïµ±Ç°ÓÃ»§ÊÇ·ñÎªÓÎ¿Í
+//åˆ¤æ–­å½“å‰ç”¨æˆ·æ˜¯å¦ä¸ºæ¸¸å®¢
 bool isGuest();

@@ -1,4 +1,4 @@
-#include "app_paths.h"
+﻿#include "app_paths.h"
 
 #include <windows.h>
 

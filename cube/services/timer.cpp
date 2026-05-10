@@ -1,10 +1,10 @@
-#include "timer.h"
+﻿#include "timer.h"
 
 Timer::Timer() { reset(); }
 void Timer::reset() { start = clock(); }
 double Timer::elapsed() const { return (double)(clock() - start) / CLOCKS_PER_SEC; }
 
-// -------------------- SolveTimer --------------------
+//解魔方计时器
 SolveTimer::SolveTimer() : acc(0.0), t0(0), running(false) {}
 
 void SolveTimer::start() {

@@ -1,20 +1,17 @@
+ï»¿#pragma once
 
-#pragma once
+#include "plane.h"
 
-#include "plane.h" // Cube °üº¬ Plane£¬ËùÒÔĞèÒª°üº¬
-
+//å•ä¸ªå°æ–¹å—ï¼Œç»´æŠ¤å±€éƒ¨é¡¶ç‚¹å’Œå…­ä¸ªå¯ç»˜åˆ¶é¢
 class Cube {
 public:
-	// 1. ¹¹Ôìº¯Êı
 	Cube();
 
-	// 2. ÆÕÍ¨³ÉÔ±º¯Êı
 	void setOffset(Point Offset);
 	void showCube();
 	Plane* getPlanes();
 
-	// 3. ±¾µØĞı×ª (·Ç¾²Ì¬)
-	// ×¢Òâ£ºÄ¬ÈÏ²ÎÊıÖ»ÄÜÔÚÉùÃ÷ÀïĞ´£¬cppÀï²»ÄÜĞ´
+	//ç»•è‡ªèº«å±€éƒ¨è½´æˆ–æŒ‡å®šè½´æ—‹è½¬
 	void rotateX(double degree);
 	void rotateY(double degree);
 	void rotateZ(double degree);
@@ -22,22 +19,20 @@ public:
 	void rotateY_Local(double degree, const Point A = { 0,0,0 }, const Point B = { 0,0,0 }, bool bUseAB = false);
 	void rotateZ_Local(double degree, const Point A = { 0,0,0 }, const Point B = { 0,0,0 }, bool bUseAB = false);
 
-	// 4. ¾²Ì¬¹¤¾ßº¯Êı (¿ÉÒÔÖ±½ÓÍ¨¹ıÀàÃûµ÷ÓÃ)
+	//ç›´æ¥æ—‹è½¬ç‚¹åæ ‡
 	static void rotateX(Point& p, double degree);
 	static void rotateY(Point& p, double degree);
 	static void rotateZ(Point& p, double degree);
 	static Point rotateByVector(const Point& V, const Point& a, const Point& b, double T);
 
-	// 5. ÓÑÔªÉùÃ÷
 	friend class RubikCube;
 
 private:
-	// Ë½ÓĞ³ÉÔ±
 	const double e = 50;
-	static const int N = 8;   // 8¸ö¶¥µã
-	static const int P_N = 6; // 6¸öÃæ
+	static const int N = 8;   //8ä¸ªé¡¶ç‚¹
+	static const int P_N = 6; //6ä¸ªé¢
 
 	Point offset = { 0,0,0 };
-	Point vertex[N]; // ¶¥µãÊı×é
-	Plane plane[P_N]; // ÃæÊı×é
+	Point vertex[N];
+	Plane plane[P_N];
 };

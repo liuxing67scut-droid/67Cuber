@@ -1,16 +1,15 @@
 ﻿#pragma once
 #include "common.h"
 
-// 界面状态枚举
+//界面状态
 enum GameState {
-    STATE_MENU,       // 开始菜单
-    STATE_SELECT,     // 模式选择
-    STATE_GAME_3x3,   // 3阶魔方运行中
-    STATE_GAME_2x2,   // 2阶魔方 (预留)
-    STATE_EXIT        // 退出
+    STATE_MENU,
+    STATE_SELECT,
+    STATE_GAME_3x3,
+    STATE_GAME_2x2,
+    STATE_EXIT
 };
 
-// 颜色宏
 namespace UIConfig {
     const COLORREF COL_BG = RGB(35, 35, 35);
     const COLORREF COL_BTN_NORMAL = RGB(60, 60, 60);
@@ -19,20 +18,15 @@ namespace UIConfig {
     const COLORREF COL_TITLE = RGB(255, 215, 0);
 }
 
-// 按钮类
+//通用按钮
 class Button {
 public:
     Button();
     Button(int x, int y, int w, int h, std::string text);
 
-    // 设置位置和文字
     void setRect(int x, int y, int w, int h);
     void setText(const std::string& text);
-
-    // 绘制按钮，传入鼠标消息，返回是否被点击
     bool draw(MOUSEMSG msg);
-
-    // 手动检查是否包含点
     bool contains(int x, int y) const;
 
 private:
@@ -41,36 +35,21 @@ private:
     bool m_isHover;
 };
 
-// 全局UI绘制函数声明
+//基础 UI 绘制
 void drawTitle(int y, const std::string& text, int size = 48);
-// 新增：弹窗提示
 void drawPopup(const std::string& text, int durationMs = 1500);
-// 弹窗显示（每帧调用）
 void showPopupIfNeeded();
 
-
-
-// ==========================================
-// 新增：排行榜面板类
-// ==========================================
+//排行榜面板
 class RankPanel {
 public:
     RankPanel();
 
-    // 设置面板居中显示
     void show(int screenWidth, int screenHeight);
-
-    // 隐藏面板
     void hide();
-
-    // 是否可见
     bool isVisible() const;
-
-    // 绘制面板 (包含点击检测逻辑)
-    // 返回: true 如果点击了关闭按钮
     bool draw(MOUSEMSG msg);
 
-    //获取
     int getX() const { return _x; }
     int getY() const { return _y; }
     int getW() const { return _w; }
@@ -81,7 +60,7 @@ private:
     int _x, _y, _w, _h;
 };
 
-
+//登录面板
 class LoginPanel {
 public:
     LoginPanel();
@@ -89,45 +68,30 @@ public:
     void show(int screenWidth, int screenHeight);
     void hide();
     bool isVisible() const;
-
-    // 绘制面板 + 处理输入
-    // 返回值：true 表示点击了“确认”，false 表示点击了“取消”或无操作
     bool draw(MOUSEMSG msg, string& outUsername);
-
-    // ========== 【新增】处理字符输入（从图形窗口消息获取） ==========
     void handleCharInput(char ch);
 
 private:
     bool _visible;
     int _x, _y, _w, _h;
 
-    // 输入框状态
-    string _inputText;      // 输入的用户名
-    bool _isInputActive;    // 输入框是否被激活（正在输入）
+    string _inputText;
+    bool _isInputActive;
 
-    // 按钮
-    Button _btnConfirm;     // 确认
-    Button _btnCancel;      // 取消
+    Button _btnConfirm;
+    Button _btnCancel;
 };
 
-// ==========================================
-// 设置面板类
-// ==========================================
+//设置面板
 class SettingsPanel {
 public:
     SettingsPanel();
 
-    // 在指定按钮下方显示面板
-    //void show(int btnX, int btnY, int btnW, int btnH);
     void show(int panelX, int panelY);
     void hide();
     bool isVisible() const;
-
-    // 绘制面板 + 处理点击
-    // 返回值：true 表示点击了面板外部，需要关闭
     bool draw(MOUSEMSG msg);
 
-    // 获取设置状态
     bool isMusicOn() const;
     bool isSoundOn() const;
     bool isAutoRotateOn() const;
@@ -136,12 +100,10 @@ private:
     bool _visible;
     int _x, _y, _w, _h;
 
-    // 设置状态
     bool _musicOn;
     bool _soundOn;
     bool _autoRotateOn;
 
-    // 开关按钮（简单的矩形点击区域）
     struct Toggle {
         int x, y, w, h;
         bool* state;
@@ -150,10 +112,7 @@ private:
     Toggle _toggles[3];
 };
 
-
-
-
-
+//公式面板
 struct FormulaKey {
     std::string label;
     int x, y, w, h;
@@ -180,10 +139,7 @@ private:
     bool m_axesOn;
 };
 
-
-
-
-
+//教学模式颜色面板
 class TeachColorPanel {
 public:
     TeachColorPanel();

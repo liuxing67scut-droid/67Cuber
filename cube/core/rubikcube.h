@@ -1,74 +1,59 @@
-#pragma once
+ï»¿#pragma once
 
 #include "cube.h"
-#include "common.h" // °üº¬ Dir Ã¶¾Ù
+#include "common.h"
 
-
+//ä¸‰é˜¶é­”æ–¹çš„å¯è§†æ¨¡å‹ï¼Œè´Ÿè´£ç»˜åˆ¶ã€åŠ¨ç”»å’Œè´´çº¸æ˜ å°„
 class RubikCube {
 public:
-	// 1. ¹¹Ôìº¯Êı
 	RubikCube();
 
-	// 2. ºËĞÄ¹¦ÄÜ
 	void draw();
 	void rotateX(double degree);
 	void rotateY(double degree);
 	void rotateZ(double degree);
 
-	// 3. µ¥²ãĞı×ª (×¢Òâ£ºÄ¬ÈÏ²ÎÊıÖ»ÔÚÉùÃ÷´¦Ğ´)
+	//æŒ‰å½“å‰è§†è§’æ˜ å°„æ—‹è½¬å•å±‚
 	void rotateX_Local(double degree, string dir = "front");
 	void rotateY_Local(double degree, string dir = "right");
 	void rotateZ_Local(double degree, string dir = "up");
 
-	// 4. ¶¯»­¿ØÖÆ
+	//åŠ¨ç”»çŠ¶æ€
 	void rotate_Local(Dir dir, bool isRev = false);
 	void updateRotate();
 	bool isRotateOver();
 	void setRotateStep(double Step = 0.08);
 
-	// 5. ÃüÁîÖ´ĞĞ
+	//æ‰§è¡Œå…¬å¼å‘½ä»¤åºåˆ—
 	void bindCommand(const string& cmd);
 	void execute();
 	bool isExecuteOver();
 
-
-
-
-
-	// ½ÌÑ§Ä£Ê½¸¨Öú£ºÖ»ÏÔÊ¾Áù¸öÖĞĞÄ¿éµÄÑÕÉ«£¬ÆäËû¿éÖÃÎªÉî»Ò£¨ÊÓ¾õĞ§¹û£©
+	//æ•™å­¦æ¨¡å¼åªæ˜¾ç¤ºå…­ä¸ªä¸­å¿ƒå—
 	void setCentersColoredOnly();
 
-	// ²âÊÔ£º»æÖÆ×ø±êÖá²¢±ê×¢Ãæ×ÖÄ¸£¨ÓÃÓÚÁ·Ï°Ä£Ê½°ïÖú£©
+	//ç»ƒä¹ æ¨¡å¼è¾…åŠ©æ–¹å‘æ ‡è¯†
 	void drawTestAxes();
 
-	// ĞÂÔö£ºÊ°È¡Óë¸ßÁÁ½Ó¿Ú£¬ÓÃÓÚ½ÌÑ§Ä£Ê½ÓÒ¼üÑ¡ÔñÌùÖ½
-	// Êó±ê×ø±êÎªÏà¶ÔÓÚÄ§·½äÖÈ¾Ô­µã£¨Í¨³£Îª Width/2,Height/2£©µÄÆÁÄ»×ø±ê
+	//æ•™å­¦æ¨¡å¼å³é”®é€‰æ‹©è´´çº¸
 	bool pickStickerAtScreen(int mx, int my, int &out_k, int &out_i, int &out_j, int &out_planeIndex);
 	void clearAllHighlights();
 
-	// ĞÂÔö£ºÉèÖÃ¿ÉÊÓÌùÖ½ÑÕÉ«£¨²»ĞŞ¸ÄÂß¼­ Cube£©
+	//åªæ”¹æ˜¾ç¤ºé¢œè‰²ï¼Œä¸æ”¹é€»è¾‘ Cube
 	void setStickerColorVisual(int k, int i, int j, int planeIndex, COLORREF col);
-	// ĞÂÔö£º°ÑÌùÖ½Ó³Éäµ½Âß¼­ÃæÓë¸ñ×Ó
-	//v0
+
+	//ç‰©ç†è´´çº¸ä½ç½®æ˜ å°„åˆ°é€»è¾‘é¢å’Œè¡Œåˆ—
 	bool mapStickerToFace(int k, int i, int j, int planeIndex, int &outFace, int &outR, int &outC);
-	//v1
-	//bool mapStickerToFace(int k, int i, int j, int p, int& face, int& r, int& c) const;
 
-
-
-	//ĞŞ¡°¿¨ËÀ¡±
-	// ĞÂÔö£º¸ù¾İÂß¼­Êı×é Cube ÖØ»æËùÓĞÑÕÉ«£¨½öÔÚÄ§·½Î´Ğı×ªÊ±ÓĞĞ§£©
+	//æŒ‰é€»è¾‘ Cube é‡ç»˜è´´çº¸é¢œè‰²
 	void recolorFromLogicalCube(char srcCube[6][3][3]);
 
-	// ĞÂÔö£ºÖØÖÃ Map Ó³ÉäÎª³õÊ¼×´Ì¬£¨½ÌÑ§Ä£Ê½²âÊÔ»¹Ô­Ç°±ØĞëµ÷ÓÃ£©
 	void resetMap();
 
 private:
-	// Ë½ÓĞ³£Á¿
 	static const int D = 3;
 	static const int E = 100;
 
-	// ³ÉÔ±±äÁ¿
 	Cube cube[D][D][D];
 	Point offset[D][D][D];
 
@@ -76,30 +61,10 @@ private:
 	bool isReverse = false;
 	istringstream iss;
 
-	// ×¢Òâ£ºÕâÀïÖ»ÉùÃ÷ÈİÆ÷£¬¾ßÌå³õÊ¼»¯·ÅÔÚ .cpp ¹¹Ôìº¯ÊıÖĞ£¬±ÜÃâ¸´ÔÓµÄÀàÄÚ³õÊ¼»¯ÎÊÌâ
+	//å…­ä¸ªæ–¹å‘çš„å½“å‰å¯è§†è½´æ˜ å°„
 	vector<Point*> Map;
 	map<char, Dir> m;
 
-	
-
 	double step = 0.08;
-	// Ã¿¸öÊµÀıµÄµ±Ç°¶¯»­½ø¶È£¨»¡¶È£©£¬Ìæ»»Ô­ÏÈ updateRotate ÖĞµÄ static ¾Ö²¿±äÁ¿
 	double animDegree = 0.0;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

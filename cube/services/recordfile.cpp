@@ -1,82 +1,62 @@
-
-#include "recordfile.h"
+ï»¿#include "recordfile.h"
 #include "app_paths.h"
+
+#include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
 #include <ctime>
 #include <iostream>
 
-#include <algorithm>//sortĞèÒª
-
-
-// ---------------------------------------------------------
-// 0. ³õÊ¼»¯ÎÄ¼ş
-// ---------------------------------------------------------
+//ç¡®ä¿æˆç»©æ–‡ä»¶å­˜åœ¨ï¼Œå¹¶åœ¨é¦–æ¬¡åˆ›å»ºæ—¶å†™å…¥è¡¨å¤´
 void initRecordFile() {
     const string fileName = getRecordFilePath();
-    // ³¢ÊÔÒÔÖ»¶Á·½Ê½´ò¿ª
     ifstream inFile(fileName);
     if (!inFile) {
-        // ÎÄ¼ş²»´æÔÚ£¬´´½¨Ò»¸ö¿ÕÎÄ¼ş
         ofstream outFile(fileName);
-        //Ğ´Èë±íÍ·
         outFile << "Username,Time,DateTime" << endl;
         outFile.close();
-        cout << "ÒÑ´´½¨³É¼¨ÎÄ¼ş: " << fileName << endl;
+        cout << "å·²åˆ›å»ºæˆç»©æ–‡ä»¶: " << fileName << endl;
     }
     else {
         inFile.close();
     }
 }
 
-// ---------------------------------------------------------
-// 1. »ñÈ¡µ±Ç°Ê±¼ä
-// ---------------------------------------------------------
 string getCurrentTimeStr() {
     time_t t = time(nullptr);
     struct tm tm;
     localtime_s(&tm, &t);
 
-    // ÊÖ¶¯Æ´½Ó£ºÄê/ÔÂ/ÈÕ£¨²»²¹Áã£© + Ê±¼ä
-    // tm_year: ´Ó1900¿ªÊ¼  |  tm_mon: 0~11  |  tm_mday:1~31
+    //æ—¥æœŸä¸è¡¥é›¶ï¼Œä¿æŒåŸ CSV æ˜¾ç¤ºæ ¼å¼
     char buf[64];
     sprintf_s(buf, "%d/%d/%d %02d:%02d:%02d",
-        tm.tm_year + 1900,   // Äê
-        tm.tm_mon + 1,       // ÔÂ£¨²»²¹Áã£º3 ¡ú 3£¬²»ÊÇ03£©
-        tm.tm_mday,          // ÈÕ£¨²»²¹Áã£º8 ¡ú 8£¬²»ÊÇ08£©
-        tm.tm_hour,          // Ê±
-        tm.tm_min,           // ·Ö
-        tm.tm_sec);          // Ãë
+        tm.tm_year + 1900,
+        tm.tm_mon + 1,
+        tm.tm_mday,
+        tm.tm_hour,
+        tm.tm_min,
+        tm.tm_sec);
 
     return string(buf);
 }
 
-// ---------------------------------------------------------
-// 2. ±£´æ³É¼¨
-// ---------------------------------------------------------
 void saveScore(string name, double time_sec) {
     const string fileName = getRecordFilePath();
-    // ´ò¿ªÎÄ¼ş£ºios::app ±íÊ¾×·¼Ó
     ofstream outFile(fileName, ios::out | ios::app);
 
     if (!outFile.is_open()) {
-        cout << "´íÎó£ºÎŞ·¨´ò¿ªÎÄ¼ş±£´æ³É¼¨" << endl;
+        cout << "é”™è¯¯ï¼šæ— æ³•æ‰“å¼€æ–‡ä»¶ä¿å­˜æˆç»©" << endl;
         return;
     }
 
     string now = getCurrentTimeStr();
-
-    // Ğ´Èë CSV
     outFile << name << "," << time_sec << "," << now << endl;
 
     outFile.close();
-    cout << "³É¼¨ÒÑ±£´æ: " << name << " - " << time_sec << "s" << endl;
+    cout << "æˆç»©å·²ä¿å­˜: " << name << " - " << time_sec << "s" << endl;
 }
 
-// ---------------------------------------------------------
-// 3. ¶ÁÈ¡ËùÓĞ³É¼¨
-// ---------------------------------------------------------
 vector<UserScore> getAllScores() {
     vector<UserScore> result;
     ifstream inFile(getRecordFilePath());
@@ -101,7 +81,7 @@ vector<UserScore> getAllScores() {
                 result.emplace_back(name, t, dateStr);
             }
             catch (...) {
-                continue; // Ìø¹ı»µÊı¾İ
+                continue;
             }
         }
     }
@@ -110,31 +90,19 @@ vector<UserScore> getAllScores() {
     return result;
 }
 
-// ---------------------------------------------------------
-//4.¸¨Öú±È½Ïº¯Êı
-// ---------------------------------------------------------
 bool compareScore(const UserScore& a, const UserScore& b) {
-    // Èç¹û a µÄÊ±¼ä < b µÄÊ±¼ä£¬a Ó¦¸ÃÅÅÔÚÇ°Ãæ£¬·µ»Ø true
     return a.time < b.time;
 }
 
-// ---------------------------------------------------------
-// 5.»ñÈ¡ÅÅĞòºóµÄÇ° N Ãû
-// ---------------------------------------------------------
 vector<UserScore> getSortedTopScores(int topN) {
-    // 1. ÏÈ¶ÁÈ¡ËùÓĞÊı¾İ
     vector<UserScore> allData = getAllScores();
 
-    // 2. Èç¹ûÃ»ÓĞÊı¾İ£¬Ö±½Ó·µ»Ø¿Õ
     if (allData.empty()) {
         return allData;
     }
 
-    // 3. Ê¹ÓÃ std::sort ÅÅĞò
-    // ĞèÒª°üº¬ <algorithm> Í·ÎÄ¼ş£¬Èç¹û±¨´íÇëÔÚ cpp ¿ªÍ·¼ÓÉÏ #include <algorithm>
     sort(allData.begin(), allData.end(), compareScore);
 
-    // 4. ½ØÈ¡Ç° topN Ãû
     vector<UserScore> result;
     int count = min((int)allData.size(), topN);
     for (int i = 0; i < count; i++) {

@@ -1,11 +1,6 @@
+ï»¿#include "point.h"
 
-#include "point.h" // ±ØÐë°üº¬×Ô¼ºµÄÍ·ÎÄ¼þ
-
-// ---------------------------------------------------------
-// 1. ÊµÏÖ Point ÀàµÄ³ÉÔ±º¯Êý
-// ---------------------------------------------------------
-
-// Í¸ÊÓ±ä»»º¯Êý
+//æŒ‰è§‚å¯Ÿç‚¹åšé€è§†æŠ•å½±ï¼ŒEasyX å±å¹•åæ ‡ y è½´å‘ä¸‹
 POINT Point::trans(const Point* offset) const {
 	double X, Y, Z;
 	X = x + offset->x, Y = y + offset->y, Z = z + offset->z;
@@ -14,20 +9,14 @@ POINT Point::trans(const Point* offset) const {
 	return { int(Y), int(-Z) };
 }
 
-// ÖØÔØ *= ÔËËã·û
 Point& Point::operator*=(double n) {
 	x *= n, y *= n, z *= n;
 	return *this;
 }
 
-// ÖØÔØ¸ººÅÔËËã·û (ÀýÈç -p)
 Point Point::operator-() const {
 	return { -x, -y, -z };
 }
-
-// ---------------------------------------------------------
-// 2. ÊµÏÖÓÑÔªº¯Êý (operator+, -, *, /)
-// ---------------------------------------------------------
 
 Point operator+(const Point& a, const Point& b) {
 	return { a.x + b.x, a.y + b.y, a.z + b.z };
@@ -45,10 +34,6 @@ Point operator/(const Point& a, double n) {
 	return { a.x / n, a.y / n, a.z / n };
 }
 
-// ---------------------------------------------------------
-// 3. ÊµÏÖÈ«¾Ö¼¸ºÎ¹¤¾ßº¯Êý
-// ---------------------------------------------------------
-
 Point cross(const Point& u, const Point& v) {
 	return { u.y * v.z - u.z * v.y, u.z * v.x - u.x * v.z, u.x * v.y - u.y * v.x };
 }
@@ -60,6 +45,7 @@ double Dist(const Point& a, const Point& b) {
 double Cos(const Point& a, const Point& b) {
 	Point origin = { 0,0,0 };
 	double alpha = (a.x * b.x + a.y * b.y + a.z * b.z) / (Dist(a, origin) * Dist(b, origin));
+	//é™åˆ¶è¾¹ç•Œï¼Œé¿å…æµ®ç‚¹è¯¯å·®å½±å“è§’åº¦è®¡ç®—
 	return (alpha > 0.99) ? 0.99 : (alpha < -0.99) ? -0.99 : alpha;
 }
 

@@ -2,14 +2,10 @@
 #include "music.h"
 #include <ctime>
 
-#include "recordfile.h" // 用来读取数据
+#include "recordfile.h"
 #include <sstream>
 #include <iomanip>
 
-
-// ---------------------------------------------------------
-// Button 类实现
-// ---------------------------------------------------------
 Button::Button() : m_x(0), m_y(0), m_w(0), m_h(0), m_isHover(false) {}
 
 Button::Button(int x, int y, int w, int h, std::string text)
@@ -29,29 +25,22 @@ bool Button::contains(int x, int y) const {
 }
 
 bool Button::draw(MOUSEMSG msg) {
-    // 1. 判断悬停
     m_isHover = contains(msg.x, msg.y);
 
-    // 2. 绘制背景
     setfillcolor(m_isHover ? UIConfig::COL_BTN_HOVER : UIConfig::COL_BTN_NORMAL);
     fillroundrect(m_x, m_y, m_x + m_w, m_y + m_h, 10, 10);
 
-    // 3. 绘制文字
     setbkmode(TRANSPARENT);
     settextcolor(UIConfig::COL_TEXT);
     settextstyle(24, 0, _T("微软雅黑"));
 
-    // 【关键修改】将 std::string 转为 C 风格字符串
     const char* textCStr = m_text.c_str();
 
-    // 【关键修改】计算文字尺寸
     int tw = textwidth(textCStr);
     int th = textheight(textCStr);
 
-    // 【关键修改】输出文字
     outtextxy(m_x + (m_w - tw) / 2, m_y + (m_h - th) / 2, textCStr);
 
-    // 播放按键音效
     if (m_isHover && msg.uMsg == WM_LBUTTONDOWN) {
         playClickSound();
         return true;
@@ -59,18 +48,13 @@ bool Button::draw(MOUSEMSG msg) {
     return false;
 }
 
-// ---------------------------------------------------------
-// 全局函数实现
-// ---------------------------------------------------------
 void drawTitle(int y, const std::string& text, int size) {
     settextcolor(UIConfig::COL_TITLE);
     settextstyle(size, 0, _T("微软雅黑"));
     setbkmode(TRANSPARENT);
 
-    // 【关键修改】获取屏幕宽度
     int screenW = getwidth();
 
-    // 【关键修改】字符串转换
     const char* textCStr = text.c_str();
 
     int w = textwidth(textCStr);
@@ -91,11 +75,9 @@ void showPopupIfNeeded() {
     if (!popupText.empty()) {
         int elapsed = (int)(clock() - popupStart) * 1000 / CLOCKS_PER_SEC;
         if (elapsed < popupDuration) {
-            // 保存当前颜色
             COLORREF oldFill = getfillcolor();
             COLORREF oldLine = getlinecolor();
 
-            // 居中显示小窗口
             int w = 240, h = 60;
             int x = (Width - w) / 2;
             int y = 120;
@@ -109,7 +91,6 @@ void showPopupIfNeeded() {
             int th = textheight(popupText.c_str());
             outtextxy(x + (w-tw)/2, y + (h-th)/2, popupText.c_str());
 
-            // 恢复颜色
             setfillcolor(oldFill);
             setlinecolor(oldLine);
         } else {
@@ -119,15 +100,10 @@ void showPopupIfNeeded() {
 }
 
 
-// ==========================================
-// RankPanel 实现
-// ==========================================
-
 RankPanel::RankPanel() : _visible(false), _x(0), _y(0), _w(420), _h(480) {}
 
 void RankPanel::show(int screenWidth, int screenHeight) {
     _visible = true;
-    // 计算居中位置
     _x = (screenWidth - _w) / 2;
     _y = (screenHeight - _h) / 2;
 }
@@ -143,28 +119,23 @@ bool RankPanel::isVisible() const {
 bool RankPanel::draw(MOUSEMSG msg) {
     if (!_visible) return false;
 
-    //1.进入函数时：保存所有绘图状态
     COLORREF saveFillColor = getfillcolor();
     COLORREF saveTextColor = gettextcolor();
     COLORREF saveLineColor = getlinecolor();
     int saveBkMode = getbkmode();
-    //保存当前字体
     LOGFONT saveFont;
     gettextstyle(&saveFont);
 
-    //设为 (0,0)，最后再设回中心
+    //面板按屏幕坐标绘制
     setorigin(0, 0);
 
     bool shouldClose = false;
 
-    // EasyX 不支持直接半透明矩形
-    // 2. 绘制面板边框和背景
     setfillcolor(RGB(28, 28, 28));
     setlinecolor(RGB(220, 220, 220));
     setlinestyle(PS_SOLID, 2);
     fillrectangle(_x, _y, _x + _w, _y + _h);
 
-    // 3. 标题
     setbkmode(TRANSPARENT);
     settextcolor(WHITE);
     settextstyle(32, 0, _T("微软雅黑"));
@@ -172,16 +143,13 @@ bool RankPanel::draw(MOUSEMSG msg) {
     int tw = textwidth(title);
     outtextxy(_x + (_w - tw) / 2, _y + 25, title);
 
-    // 4. 关闭按钮 "X"
     int closeX = _x + _w - 35;
     int closeY = _y + 15;
     settextcolor(RGB(255, 80, 80));
     settextstyle(24, 0, _T("微软雅黑"));
     outtextxy(closeX, closeY, _T("X"));
 
-    // 检测点击关闭
     if (msg.uMsg == WM_LBUTTONDOWN) {
-        // 只判断点击右上角 X
         if (msg.x >= closeX && msg.x <= closeX + 25 &&
             msg.y >= closeY && msg.y <= closeY + 25) {
             playClickSound();
@@ -189,12 +157,11 @@ bool RankPanel::draw(MOUSEMSG msg) {
         }
     }
 
-    // 5. 表头
     int tableY = _y + 85;
-    int col1 = _x + 30;  // 排名
-    int col2 = _x + 100; // 玩家
-    int col3 = _x + 230; // 用时
-    int col4 = _x + 310; // 时间
+    int col1 = _x + 30;
+    int col2 = _x + 100;
+    int col3 = _x + 230;
+    int col4 = _x + 310;
 
     settextcolor(RGB(160, 160, 160));
     settextstyle(20, 0, _T("微软雅黑"));
@@ -203,103 +170,69 @@ bool RankPanel::draw(MOUSEMSG msg) {
     outtextxy(col3, tableY, _T("用时"));
     outtextxy(col4, tableY, _T("日期"));
 
-    // 分隔线
     setlinecolor(RGB(80, 80, 80));
     line(_x + 15, tableY + 28, _x + _w - 15, tableY + 28);
 
-    // 6. 获取数据并绘制列表
     vector<UserScore> scores = getSortedTopScores(10);
     int rowY = tableY + 40;
     int rowH = 36;
 
     for (int i = 0; i < scores.size() && i < 10; i++) {
-        // 颜色设置
-        if (i == 0) settextcolor(RGB(255, 215, 0));       // 金
-        else if (i == 1) settextcolor(RGB(192, 192, 192)); // 银
-        else if (i == 2) settextcolor(RGB(205, 127, 50));  // 铜
-        else settextcolor(RGB(240, 240, 240));              // 白
+        if (i == 0) settextcolor(RGB(255, 215, 0));
+        else if (i == 1) settextcolor(RGB(192, 192, 192));
+        else if (i == 2) settextcolor(RGB(205, 127, 50));
+        else settextcolor(RGB(240, 240, 240));
 
         settextstyle(20, 0, _T("微软雅黑"));
 
         TCHAR buf[128];
 
-        //表项
-        
-        // 排名
         _stprintf_s(buf, _T("%d"), i + 1);
         outtextxy(col1, rowY, buf);
 
-        // 玩家名
         outtextxy(col2, rowY, scores[i].username.c_str());
 
-        // 用时
-        // 格式化用时 分:秒.毫秒
         double totalSec = scores[i].time;
         int minutes = (int)(totalSec / 60);
         double seconds = totalSec - minutes * 60;
 
         if (minutes == 0)
         {
-            // 无分钟：只显示秒，两位小数  例：2.75
             _stprintf_s(buf, _T("%.2f"), seconds);
         }
         else
         {
-            // 有分钟：显示 分:秒，一位小数 例：5:43.7
             _stprintf_s(buf, _T("%d:%.1f"), minutes, seconds);
         }
         outtextxy(col3, rowY, buf);
 
-
-        // 日期
         string dtFull = scores[i].datetime;
-        // 找到【第一个空格】的位置
         size_t spacePos = dtFull.find(' ');
         if (spacePos != string::npos) {
-            // 截取【从开头到第一个空格】的内容 = 纯日期
             string datePart = dtFull.substr(0, spacePos);
-			//  '-' 替换为 '/'
             for (auto& c : datePart) {
                 if (c == '-') c = '/';
             }
             outtextxy(col4, rowY, datePart.c_str());
         }
-
-
-
         rowY += rowH;
     }
 
-    // 【修复 3/3】恢复坐标系为中心 (Width/2, Height/2)
-    // 注意：这里不能用 getwidth()/getheight()，因为我们不知道外部的 Width/Height 变量
-    // 但没关系，main.cpp 里每次画魔方前都会重新 setorigin(Width/2, Height/2)
-    // 所以这里我们可以什么都不做，或者留空
-    // 为了保险，我们假设 main.cpp 会处理好坐标系
-
-    // ========== 恢复 ==========
-    setfillcolor(saveFillColor);   // 恢复填充色
-    settextcolor(saveTextColor);   // 恢复文字色
-    setlinecolor(saveLineColor);   // 恢复线条色 (这就是为什么按钮变暗的原因！)
-    setbkmode(saveBkMode);         // 恢复背景模式
-    setlinestyle(PS_SOLID, 1);     // 强制恢复线宽为 1
-    settextstyle(&saveFont);        // 恢复字体
+    setfillcolor(saveFillColor);
+    settextcolor(saveTextColor);
+    setlinecolor(saveLineColor);
+    setbkmode(saveBkMode);
+    setlinestyle(PS_SOLID, 1);
+    settextstyle(&saveFont);
 
     return shouldClose;
 }
-
-
-
-// ==========================================
-// LoginPanel 实现
-// ==========================================
-
 LoginPanel::LoginPanel() : _visible(false), _x(0), _y(0), _w(400), _h(280), _isInputActive(false) {}
 
 void LoginPanel::show(int screenWidth, int screenHeight) {
     _visible = true;
-    _inputText.clear(); // 打开面板时清空输入
+    _inputText.clear();
     _isInputActive = false;
-    // 居中
     _x = (screenWidth - _w) / 2;
     _y = (screenHeight - _h) / 2;
 }
@@ -315,7 +248,6 @@ bool LoginPanel::isVisible() const {
 bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
     if (!_visible) return false;
 
-    // 保存绘图状态
     COLORREF saveFill = getfillcolor();
     COLORREF saveText = gettextcolor();
     COLORREF saveLine = getlinecolor();
@@ -326,13 +258,11 @@ bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
     bool confirmed = false;
     setorigin(0, 0);
 
-    // 1. 绘制面板背景
     setfillcolor(RGB(40, 40, 40));
     setlinecolor(RGB(255, 255, 255));
     setlinestyle(PS_SOLID, 1);
     fillrectangle(_x, _y, _x + _w, _y + _h);
 
-    // 2. 标题
     setbkmode(TRANSPARENT);
     settextcolor(WHITE);
     settextstyle(28, 0, _T("微软雅黑"));
@@ -340,31 +270,26 @@ bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
     int tw = textwidth(title);
     outtextxy(_x + (_w - tw) / 2, _y + 30, title);
 
-    // 3. 输入框标签
     settextstyle(18, 0, _T("微软雅黑"));
     settextcolor(RGB(200, 200, 200));
     outtextxy(_x + 40, _y + 90, _T("用户名："));
 
-    // 4. 输入框矩形
     int inputX = _x + 40;
     int inputY = _y + 120;
     int inputW = _w - 80;
     int inputH = 40;
 
-    // 输入框激活时边框变亮
     if (_isInputActive) setlinecolor(RGB(100, 200, 255));
     else setlinecolor(RGB(100, 100, 100));
     setfillcolor(RGB(60, 60, 60));
     fillrectangle(inputX, inputY, inputX + inputW, inputY + inputH);
 
-    // 5. 绘制输入的文字
     settextcolor(WHITE);
     settextstyle(20, 0, _T("微软雅黑"));
     if (!_inputText.empty()) {
         outtextxy(inputX + 10, inputY + 8, _inputText.c_str());
     }
 
-    // 6. 检测点击输入框
     if (msg.uMsg == WM_LBUTTONDOWN) {
         if (msg.x >= inputX && msg.x <= inputX + inputW &&
             msg.y >= inputY && msg.y <= inputY + inputH) {
@@ -374,11 +299,6 @@ bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
             _isInputActive = false;
         }
     }
-
-
-    
-
-    // 8. 绘制确认/取消按钮
     int btnW = 100, btnH = 35;
     int btnY = _y + _h - 60;
     _btnConfirm.setRect(_x + 60, btnY, btnW, btnH);
@@ -402,7 +322,6 @@ bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
         hide();
     }
 
-    // 恢复绘图状态
     setfillcolor(saveFill);
     settextcolor(saveText);
     setlinecolor(saveLine);
@@ -413,40 +332,23 @@ bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
     return confirmed;
 }
 
-// ========== 【新增】字符输入处理函数 ==========
 void LoginPanel::handleCharInput(char ch) {
     if (!_visible || !_isInputActive) return;
 
     if (ch == '\b') {
-        // 退格键
         if (!_inputText.empty()) {
             _inputText.pop_back();
         }
     }
     else if (ch >= 32 && ch <= 126 && _inputText.length() < 16) {
-        // 可打印字符（字母、数字、符号）
         _inputText += ch;
     }
 }
 
-
-// ==========================================
-// SettingsPanel 实现
-// ==========================================
-
 SettingsPanel::SettingsPanel() : _visible(false), _x(0), _y(0), _w(200), _h(180),
 _musicOn(true), _soundOn(true), _autoRotateOn(true) {
 }
-/*
-void SettingsPanel::show(int btnX, int btnY, int btnW, int btnH) {
-    _visible = true;
-    // 面板显示在按钮下方
-    _x = btnX;
-    _y = btnY + btnH + 5;
-}
-*/
 
-//v2
 void SettingsPanel::show(int panelX, int panelY) {
     _visible = true;
     _x = panelX;
@@ -473,125 +375,9 @@ bool SettingsPanel::isAutoRotateOn() const {
     return _autoRotateOn;
 }
 
-//v0
-/*
 bool SettingsPanel::draw(MOUSEMSG msg) {
     if (!_visible) return false;
 
-    // 保存绘图状态
-    COLORREF saveFill = getfillcolor();
-    COLORREF saveText = gettextcolor();
-    COLORREF saveLine = getlinecolor();
-    int saveBk = getbkmode();
-    LOGFONT saveFont;
-    gettextstyle(&saveFont);
-
-    bool clickOutside = false;
-    setorigin(0, 0);
-
-    // 1. 绘制面板背景
-    setfillcolor(RGB(40, 40, 40));
-    setlinecolor(RGB(255, 255, 255));
-    setlinestyle(PS_SOLID, 1);
-    fillrectangle(_x, _y, _x + _w, _y + _h);
-
-    // 2. 初始化开关位置
-    int itemY = _y + 20;
-    int gap = 50;
-
-    // 音乐开关
-    _toggles[0].x = _x + 20;
-    _toggles[0].y = itemY;
-    _toggles[0].w = 40;
-    _toggles[0].h = 20;
-    _toggles[0].state = &_musicOn;
-    _toggles[0].label = "音乐";
-
-    // 音效开关
-    itemY += gap;
-    _toggles[1].x = _x + 20;
-    _toggles[1].y = itemY;
-    _toggles[1].w = 40;
-    _toggles[1].h = 20;
-    _toggles[1].state = &_soundOn;
-    _toggles[1].label = "音效";
-
-    // 自转开关
-    itemY += gap;
-    _toggles[2].x = _x + 20;
-    _toggles[2].y = itemY;
-    _toggles[2].w = 40;
-    _toggles[2].h = 20;
-    _toggles[2].state = &_autoRotateOn;
-    _toggles[2].label = "魔方自转";
-
-    // 3. 绘制所有开关
-    setbkmode(TRANSPARENT);
-    settextstyle(16, 0, _T("微软雅黑"));
-
-    for (int i = 0; i < 3; i++) {
-        Toggle& t = _toggles[i];
-
-        // 绘制标签
-        settextcolor(RGB(200, 200, 200));
-        outtextxy(t.x, t.y, t.label);
-
-        // 绘制开关框
-        int swX = t.x + 60;
-        int swY = t.y;
-        if (*(t.state)) {
-            setfillcolor(RGB(80, 180, 80)); // 开：绿色
-        }
-        else {
-            setfillcolor(RGB(100, 100, 100)); // 关：灰色
-        }
-        setlinecolor(RGB(255, 255, 255));
-        fillrectangle(swX, swY, swX + t.w, swY + t.h);
-
-        // 绘制开关文字
-        settextcolor(WHITE);
-        outtextxy(swX + 10, swY + 2, *(t.state) ? _T("开") : _T("关"));
-
-        // 检测点击
-        if (msg.uMsg == WM_LBUTTONDOWN) {
-            if (msg.x >= swX && msg.x <= swX + t.w &&
-                msg.y >= swY && msg.y <= swY + t.h) {
-                *(t.state) = !*(t.state); // 切换状态
-            }
-        }
-    }
-
-    
-         //4. 检测点击面板外部
- //   if (msg.uMsg == WM_LBUTTONDOWN) {
-   //     if (msg.x < _x || msg.x > _x + _w ||
-     //       msg.y < _y || msg.y > _y + _h) {
-       //     clickOutside = true;
-       // }
-    //}
-    
-
-
-            // 恢复绘图状态
-        setfillcolor(saveFill);
-        settextcolor(saveText);
-        setlinecolor(saveLine);
-        setbkmode(saveBk);
-        settextstyle(&saveFont);
-        setlinestyle(PS_SOLID, 1);
-
-        return clickOutside;
-
-
-}
-
-*/
-
-//v1
-bool SettingsPanel::draw(MOUSEMSG msg) {
-    if (!_visible) return false;
-
-    // 保存绘图状态
     COLORREF saveFill = getfillcolor();
     COLORREF saveText = gettextcolor();
     COLORREF saveLine = getlinecolor();
@@ -601,16 +387,13 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
 
     setorigin(0, 0);
 
-    // ========== 1. 绘制圆角矩形背景（参考 FormulaPanel） ==========
     setfillcolor(RGB(40, 40, 40));
-    setlinecolor(RGB(120, 120, 120)); // 边框颜色和 FormulaPanel 一致
-    fillroundrect(_x, _y, _x + _w, _y + _h, 12, 12); // 圆角矩形
+    setlinecolor(RGB(120, 120, 120));
+    fillroundrect(_x, _y, _x + _w, _y + _h, 12, 12);
 
-    // ========== 2. 初始化开关位置 ==========
     int itemY = _y + 25;
     int gap = 55;
 
-    // 音乐开关
     _toggles[0].x = _x + 20;
     _toggles[0].y = itemY;
     _toggles[0].w = 45;
@@ -618,7 +401,6 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
     _toggles[0].state = &_musicOn;
     _toggles[0].label = "音乐：";
 
-    // 音效开关
     itemY += gap;
     _toggles[1].x = _x + 20;
     _toggles[1].y = itemY;
@@ -627,7 +409,6 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
     _toggles[1].state = &_soundOn;
     _toggles[1].label = "音效：";
 
-    // 自转开关
     itemY += gap;
     _toggles[2].x = _x + 20;
     _toggles[2].y = itemY;
@@ -636,44 +417,37 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
     _toggles[2].state = &_autoRotateOn;
     _toggles[2].label = "魔方自转：";
 
-    // ========== 3. 绘制所有开关 ==========
     setbkmode(TRANSPARENT);
-    settextstyle(24, 0, _T("微软雅黑")); // 字体调大
+    settextstyle(24, 0, _T("微软雅黑"));
 
     for (int i = 0; i < 3; i++) {
         Toggle& t = _toggles[i];
 
-        // 绘制标签
-        settextcolor(RGB(220, 220, 220)); // 标签颜色更亮
+        settextcolor(RGB(220, 220, 220));
         outtextxy(t.x, t.y, t.label);
 
-        // 绘制开关框（圆角矩形，参考 FormulaPanel 按钮）
         int swX = t.x + 120;
         int swY = t.y;
 
-        // 检测悬停（参考 FormulaPanel 的悬停效果）
         bool isHover = (msg.x >= swX && msg.x <= swX + t.w &&
             msg.y >= swY && msg.y <= swY + t.h);
 
-        // 去掉绿色，只用深浅灰色区分开/关
         if (*(t.state)) {
-            setfillcolor(isHover ? RGB(110, 110, 110) : RGB(90, 90, 90)); // 开：深灰
+            setfillcolor(isHover ? RGB(110, 110, 110) : RGB(90, 90, 90));
         }
         else {
-            setfillcolor(isHover ? RGB(80, 80, 80) : RGB(60, 60, 60)); // 关：浅灰
+            setfillcolor(isHover ? RGB(80, 80, 80) : RGB(60, 60, 60));
         }
 
         setlinecolor(RGB(120, 120, 120));
-        fillroundrect(swX, swY, swX + t.w, swY + t.h, 6, 6); // 开关也是圆角矩形
+        fillroundrect(swX, swY, swX + t.w, swY + t.h, 6, 6);
 
-        // 绘制开关文字（调大字体）
         settextcolor(RGB(255, 255, 255));
         settextstyle(24, 0, _T("微软雅黑"));
         outtextxy(swX + 14, swY + 0, *(t.state) ? _T("开") : _T("关"));
 
-        // 检测点击
         if (msg.uMsg == WM_LBUTTONDOWN && isHover) {
-            *(t.state) = !*(t.state); // 切换状态
+            *(t.state) = !*(t.state);
             if (i == 0) {
                 setMusicEnabled(_musicOn);
             }
@@ -683,7 +457,6 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
         }
     }
 
-    // 恢复绘图状态
     setfillcolor(saveFill);
     settextcolor(saveText);
     setlinecolor(saveLine);

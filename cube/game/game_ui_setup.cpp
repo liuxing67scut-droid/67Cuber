@@ -1,14 +1,14 @@
-#include "game_internal.h"
+ï»¿#include "game_internal.h"
 
 static void initMenuButtons() {
 	Button& btnGuestEnter = g_ui.menu.guestEnter;
 	Button& btnUserLogin = g_ui.menu.userLogin;
 
 	btnGuestEnter.setRect((Width - 200) / 2, 300, 200, 60);
-	btnGuestEnter.setText("ÓÎ¿Í½øÈë");
+	btnGuestEnter.setText("æ¸¸å®¢è¿›å…¥");
 
 	btnUserLogin.setRect((Width - 200) / 2, 400, 200, 60);
-	btnUserLogin.setText("ÓÃ»§µÇÂ¼");
+	btnUserLogin.setText("ç”¨æˆ·ç™»å½•");
 }
 
 static void initSelectButtons() {
@@ -17,13 +17,13 @@ static void initSelectButtons() {
 	Button& btnBack = g_ui.select.back;
 
 	btn3x3.setRect((Width - 200) / 2, 300, 200, 60);
-	btn3x3.setText("3 ½×Ä§·½");
+	btn3x3.setText("3 é˜¶é­”æ–¹");
 
 	btn2x2.setRect((Width - 200) / 2, 400, 200, 60);
-	btn2x2.setText("¾´ÇëÆÚ´ý");
+	btn2x2.setText("æ•¬è¯·æœŸå¾…");
 
 	btnBack.setRect(20, 20, 80, 30);
-	btnBack.setText("< ·µ»Ø");
+	btnBack.setText("< è¿”å›ž");
 }
 
 static void initOverlayButtons() {
@@ -36,9 +36,9 @@ static void initOverlayButtons() {
 	int btnH = 30;
 
 	btnRankList.setRect(btnR_X, btnR_Y, btnW, btnH);
-	btnRankList.setText("ÅÅÐÐ°ñ");
+	btnRankList.setText("æŽ’è¡Œæ¦œ");
 	btnSettings.setRect(btnR_X, btnR_Y + btnH + 10, btnW, btnH);
-	btnSettings.setText("ÉèÖÃ");
+	btnSettings.setText("è®¾ç½®");
 }
 
 static void initPlayButtons() {
@@ -61,35 +61,35 @@ static void initPlayButtons() {
 	Button& btnTeachReset = g_ui.playTeach.reset;
 
 	btnBack.setRect(20, 20, 80, 30);
-	btnBack.setText("< ·µ»Ø");
+	btnBack.setText("< è¿”å›ž");
 
 	btnAutoRand.setRect(60, 200, 120, 50);
-	btnAutoRand.setText("Ëæ»ú´òÂÒ");
+	btnAutoRand.setText("éšæœºæ‰“ä¹±");
 	btnAutoSolve.setRect(60, 270, 120, 50);
-	btnAutoSolve.setText("Ëã·¨»¹Ô­");
+	btnAutoSolve.setText("ç®—æ³•è¿˜åŽŸ");
 	btnAutoReset.setRect(60, 340, 120, 50);
-	btnAutoReset.setText("Ò»¼ü¸´Î»");
+	btnAutoReset.setText("ä¸€é”®å¤ä½");
 
 	btnPracticeRand.setRect(60, 200, 120, 50);
-	btnPracticeRand.setText("Ëæ»ú´òÂÒ");
+	btnPracticeRand.setText("éšæœºæ‰“ä¹±");
 	btnPracticeReset.setRect(60, 270, 120, 50);
-	btnPracticeReset.setText("Ò»¼ü¸´Î»");
+	btnPracticeReset.setText("ä¸€é”®å¤ä½");
 	btnPracticeFormula.setRect(60, 340, 120, 50);
-	btnPracticeFormula.setText("¹«Ê½¿ØÖÆ");
+	btnPracticeFormula.setText("å…¬å¼æŽ§åˆ¶");
 
 	btnTeachTestSolve.setRect(60, 200, 120, 50);
-	btnTeachTestSolve.setText("ÈË»ú¶ÔÕ½");
+	btnTeachTestSolve.setText("äººæœºå¯¹æˆ˜");
 	btnTeachStep.setRect(60, 270, 120, 50);
-	btnTeachStep.setText("²½Öè½ÌÑ§");
+	btnTeachStep.setText("æ­¥éª¤æ•™å­¦");
 	btnTeachReset.setRect(60, 340, 120, 50);
-	btnTeachReset.setText("Ò»¼ü¸´Î»");
+	btnTeachReset.setText("ä¸€é”®å¤ä½");
 
 	btnModeAuto.setRect(MODE_START_X, MODE_Y, MODE_BTN_W, MODE_BTN_H);
-	btnModeAuto.setText("×Ô¶¯Ä£Ê½");
+	btnModeAuto.setText("è‡ªåŠ¨æ¨¡å¼");
 	btnModePractice.setRect(MODE_START_X + (MODE_BTN_W + MODE_GAP), MODE_Y, MODE_BTN_W, MODE_BTN_H);
-	btnModePractice.setText("Á·Ï°Ä£Ê½");
+	btnModePractice.setText("ç»ƒä¹ æ¨¡å¼");
 	btnModeTeach.setRect(MODE_START_X + (MODE_BTN_W + MODE_GAP) * 2, MODE_Y, MODE_BTN_W, MODE_BTN_H);
-	btnModeTeach.setText("½ÌÑ§Ä£Ê½");
+	btnModeTeach.setText("æ•™å­¦æ¨¡å¼");
 }
 
 void initButtons() {

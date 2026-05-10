@@ -1,18 +1,7 @@
+ï»¿#include "cube.h"
 
-#include "cube.h"
-//#include <algorithm> // ÒòÎªÓÃµ½ÁË sort //·ÅÔÚcommon.hÖĞ
-
-// ---------------------------------------------------------
-// 1. ¹¹Ôìº¯ÊıÊµÏÖ
-// ---------------------------------------------------------
 Cube::Cube() {
-	// ³õÊ¼»¯¶¥µãÊı×é (C++11 Ö®Ç°¿ÉÄÜĞèÒªÔÚ¹¹ÔìÌåÄÚÖğ¸ö¸³Öµ£¬ÕâÀïÖ±½ÓÓÃÁĞ±í)
-	// ×¢Òâ£ºÕâÀïÎªÁËÇåÎú£¬ÎÒÃÇÏÔÊ½³õÊ¼»¯ vertex£¬ËäÈ»Í·ÎÄ¼şÀïÒÑ¾­¸øÁËÄ¬ÈÏÖµ
-	// µ«ÎªÁËÈ·±£ e=50 ÉúĞ§£¬ÎÒÃÇÔÚ¹¹ÔìÌåÀïÖØĞÂĞ´Ò»±éÂß¼­ÊÇ×îÎÈÍ×µÄ£¬
-	// »òÕßÖ±½ÓĞÅÈÎÍ·ÎÄ¼şÖĞµÄ in-class initializer¡£
-	// ÕâÀïÖ±½ÓÖ´ĞĞ°ó¶¨Âß¼­£º
-
-	// ÖØĞÂ³õÊ¼»¯ vertex (È·±£ e ±»ÕıÈ·Ê¹ÓÃ£¬±ÜÃâÄ³Ğ©±àÒëÆ÷¶Ô in-class init µÄË³ĞòÎÊÌâ)
+	//ç”¨å±€éƒ¨åæ ‡åˆå§‹åŒ– 8 ä¸ªé¡¶ç‚¹
 	vertex[0] = { e, -e,  e };
 	vertex[1] = { e,  e,  e };
 	vertex[2] = { e,  e, -e };
@@ -22,18 +11,14 @@ Cube::Cube() {
 	vertex[6] = { -e,  e, -e };
 	vertex[7] = { -e, -e, -e };
 
-	// °ó¶¨Ãæ
-	plane[0].bindPoint(&vertex[0], &vertex[1], &vertex[2], &vertex[3]); // Front
-	plane[1].bindPoint(&vertex[1], &vertex[5], &vertex[6], &vertex[2]); // Right
-	plane[2].bindPoint(&vertex[3], &vertex[2], &vertex[6], &vertex[7]); // Down
-	plane[3].bindPoint(&vertex[0], &vertex[1], &vertex[5], &vertex[4]); // Up
-	plane[4].bindPoint(&vertex[4], &vertex[5], &vertex[6], &vertex[7]); // Back
-	plane[5].bindPoint(&vertex[0], &vertex[3], &vertex[7], &vertex[4]); // Left
+	plane[0].bindPoint(&vertex[0], &vertex[1], &vertex[2], &vertex[3]); //Front
+	plane[1].bindPoint(&vertex[1], &vertex[5], &vertex[6], &vertex[2]); //Right
+	plane[2].bindPoint(&vertex[3], &vertex[2], &vertex[6], &vertex[7]); //Down
+	plane[3].bindPoint(&vertex[0], &vertex[1], &vertex[5], &vertex[4]); //Up
+	plane[4].bindPoint(&vertex[4], &vertex[5], &vertex[6], &vertex[7]); //Back
+	plane[5].bindPoint(&vertex[0], &vertex[3], &vertex[7], &vertex[4]); //Left
 }
 
-// ---------------------------------------------------------
-// 2. ÆÕÍ¨³ÉÔ±º¯ÊıÊµÏÖ
-// ---------------------------------------------------------
 void Cube::setOffset(Point Offset) {
 	offset = Offset;
 	for (int i = 0; i < P_N; i++)
@@ -41,7 +26,7 @@ void Cube::setOffset(Point Offset) {
 }
 
 void Cube::showCube() {
-	// »­¼ÒÏûÒşËã·¨£º°´¾àÀëÅÅĞò
+	//ç”»å®¶ç®—æ³•æŒ‰è·ç¦»æ’åºï¼Œå‡å°‘é¢ç‰‡é®æŒ¡é”™è¯¯
 	sort(plane, plane + P_N, [](const Plane& a, const Plane& b) { return a > b; });
 	for (int i = 0; i < P_N; i++)
 		plane[i].draw();
@@ -51,13 +36,10 @@ Plane* Cube::getPlanes() {
 	return plane;
 }
 
-// ---------------------------------------------------------
-// 3. »ù´¡Ğı×ª (³ÉÔ±º¯Êı - Ğı×ª×ÔÉí¶¥µã)
-// ---------------------------------------------------------
 void Cube::rotateX(double degree) {
 	for (int i = 0; i < N; i++) {
 		double y = vertex[i].y, z = vertex[i].z;
-		double d = degree / 180 * PI; // z->y
+		double d = degree / 180 * PI; //z->y
 		vertex[i].y = y * cos(d) + z * sin(d);
 		vertex[i].z = z * cos(d) - y * sin(d);
 	}
@@ -66,7 +48,7 @@ void Cube::rotateX(double degree) {
 void Cube::rotateY(double degree) {
 	for (int i = 0; i < N; i++) {
 		double x = vertex[i].x, z = vertex[i].z;
-		double d = degree / 180 * PI; // x->z
+		double d = degree / 180 * PI; //x->z
 		vertex[i].z = z * cos(d) + x * sin(d);
 		vertex[i].x = x * cos(d) - z * sin(d);
 	}
@@ -75,17 +57,15 @@ void Cube::rotateY(double degree) {
 void Cube::rotateZ(double degree) {
 	for (int i = 0; i < N; i++) {
 		double x = vertex[i].x, y = vertex[i].y;
-		double d = degree / 180 * PI; // y->x
+		double d = degree / 180 * PI; //y->x
 		vertex[i].x = x * cos(d) + y * sin(d);
 		vertex[i].y = y * cos(d) - x * sin(d);
 	}
 }
 
-// ---------------------------------------------------------
-// 4. ±¾µØĞı×ª (ÈÆÈÎÒâÖá)
-// ---------------------------------------------------------
 void Cube::rotateX_Local(double degree, const Point A, const Point B, bool bUseAB) {
-	Point a = vertex[4], b = vertex[0]; // Ô¤ÏÈ´æÖµ£¬·ñÔòÑ­»·ÖĞ¸Ä±ä
+	//å…ˆç¼“å­˜æ—‹è½¬è½´ç«¯ç‚¹ï¼Œé¿å…å¾ªç¯ä¸­é¡¶ç‚¹å˜åŒ–å½±å“è½´
+	Point a = vertex[4], b = vertex[0];
 	if (bUseAB) a = A, b = B;
 	for (int i = 0; i < N; i++)
 		vertex[i] = rotateByVector(vertex[i], a, b, degree);
@@ -105,9 +85,6 @@ void Cube::rotateZ_Local(double degree, const Point A, const Point B, bool bUseA
 		vertex[i] = rotateByVector(vertex[i], a, b, degree);
 }
 
-// ---------------------------------------------------------
-// 5. ¾²Ì¬º¯ÊıÊµÏÖ
-// ---------------------------------------------------------
 void Cube::rotateX(Point& p, double degree) {
 	double y = p.y, z = p.z;
 	double d = degree / 180 * PI;
@@ -129,11 +106,11 @@ void Cube::rotateZ(Point& p, double degree) {
 	p.y = y * cos(d) - x * sin(d);
 }
 
-// ÂŞµÂÀï¸ñË¹Ğı×ª¹«Ê½
+//ç½—å¾·é‡Œæ ¼æ–¯æ—‹è½¬å…¬å¼
 Point Cube::rotateByVector(const Point& V, const Point& a, const Point& b, double T) {
 	Point K, ans;
 	K = a - b;
-	K = K / Dist(a, b); // µ¥Î»»¯
+	K = K / Dist(a, b); //å•ä½åŒ–
 	double x = K.x, y = K.y, z = K.z;
 	double u = V.x, v = V.y, w = V.z;
 

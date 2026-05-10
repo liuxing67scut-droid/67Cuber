@@ -1,4 +1,4 @@
-#include "music.h"
+﻿#include "music.h"
 #include "app_paths.h"
 
 #include <windows.h>

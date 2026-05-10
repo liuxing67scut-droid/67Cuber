@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "point.h"
 
 class Plane {
@@ -11,11 +11,11 @@ public:
 	Point Center() const;
 	void draw() const;
 
-	// ĞÂÔö£º»ñÈ¡ÆÁÄ»¶à±ßĞÎ²¢½øĞĞµãÄÚ¼ì²â£¨ÓÃÓÚÊ°È¡£©
+	//å±å¹•æ‹¾å–ç”¨çš„æŠ•å½±å››è¾¹å½¢
 	void getScreenPolygon(POINT out[4], const Point* off) const;
 	bool containsScreenPoint(int mx, int my, const Point* off) const;
 
-	// ĞÂÔö£º¸ßÁÁ¿ØÖÆ£¨½öÊÓ¾õĞ§¹û£©
+	//é€‰ä¸­é¢é«˜äº®
 	void setHighlight(bool h);
 
 	friend class Cube;

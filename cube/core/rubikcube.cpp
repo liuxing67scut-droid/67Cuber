@@ -1,15 +1,8 @@
-#include "rubikcube.h"
+ï»¿#include "rubikcube.h"
 #include "cubesolver.h"
-//#include <algorithm> // ·Åcommon.hÖĞ£¬ÓÃÓÚ sort
 
-
-
-
-// ---------------------------------------------------------
-// 1. ¹¹Ôìº¯ÊıÊµÏÖ
-// ---------------------------------------------------------
 RubikCube::RubikCube() {
-	// A. ³õÊ¼»¯Î»ÖÃÆ«ÒÆ
+	//åˆå§‹åŒ–å°æ–¹å—ä½ç½®
 	for (int k = 0; k < D; k++)
 		for (int i = 0; i < D; i++)
 			for (int j = 0; j < D; j++) {
@@ -18,48 +11,32 @@ RubikCube::RubikCube() {
 				cube[k][i][j].setOffset(offset[k][i][j]);
 			}
 
-	// B. ³õÊ¼»¯ÑÕÉ«
-	// Ï°¹ß£º
-	// R: ÓÒÃæ (Right) - ºìÉ«
-	// L: ×óÃæ (Left) - ³ÈÉ«
-	// U: ÉÏÃæ (Up) - »ÆÉ«
-	// D: ÏÂÃæ (Down) - °×É«
-	// F: Ç°Ãæ (Front) - ÂÌÉ«
-	// B: ºóÃæ (Back) - À¶É«
-	// 0:Front 1:Right 2:Back 3:Left 4:Up 5:Down
-	// 0:Front(ÂÌÉ«) 1:Right(ºìÉ«) 2:Back(À¶É«) 3:Left(³ÈÉ«) 4:Up(»ÆÉ«) 5:Down(°×É«)
-	// 
-	// Front (F) - Green
+	//é¢é¢œè‰²çº¦å®šï¼šFç»¿ Rçº¢ Bè“ Læ©™ Ué»„ Dç™½
 	for (int i = 0; i < D; i++)
 		for (int j = 0; j < D; j++)
 			cube[0][i][j].plane[0].setColor(RGB(0, 255, 0));
 
-	// Right (R) - Red
 	for (int i = 0; i < D; i++)
 		for (int k = 0; k < D; k++)
 			cube[k][i][2].plane[1].setColor(RGB(235, 0, 0));
 
-	// Back (B) - Blue
 	for (int i = 0; i < D; i++)
 		for (int j = 0; j < D; j++)
 			cube[2][i][j].plane[4].setColor(RGB(62, 157, 251));
 
-	// Left (L) - Orange
 	for (int i = 0; i < D; i++)
 		for (int k = 0; k < D; k++)
 			cube[k][i][0].plane[5].setColor(RGB(255, 128, 50));
 
-	// Up (U) - Yellow
 	for (int j = 0; j < D; j++)
 		for (int k = 0; k < D; k++)
 			cube[k][0][j].plane[3].setColor(RGB(255, 255, 0));
 
-	// Down (D) - White
 	for (int j = 0; j < D; j++)
 		for (int k = 0; k < D; k++)
 			cube[k][2][j].plane[2].setColor(RGB(235, 235, 235));
 
-	// C. ³õÊ¼»¯¸¨ÖúÓ³Éä Map (ÔÚ cpp ÖĞ³õÊ¼»¯¸ü°²È«)
+	//å½“å‰å¯è§†æ–¹å‘åˆ°ä¸­å¿ƒå—åç§»çš„æ˜ å°„
 	Map = {
 		&offset[1][1][0],
 		&offset[0][1][1],
@@ -69,16 +46,13 @@ RubikCube::RubikCube() {
 		&offset[1][2][1]
 	};
 
-	// D. ³õÊ¼»¯°´¼üÓ³Éä m
+	//å…¬å¼å­—æ¯åˆ°æ—‹è½¬æ–¹å‘çš„æ˜ å°„
 	m = {
 		{'L', Left}, {'F', Front}, {'R', Right},
 		{'B', Back}, {'U', Up}, {'D', Down}
 	};
 }
 
-// ---------------------------------------------------------
-// 2. »æÖÆÓëÕûÌåĞı×ª
-// ---------------------------------------------------------
 void RubikCube::draw() {
 	vector<pair<Plane*, double>> v;
 	for (int k = 0; k < D; k++)
@@ -89,7 +63,7 @@ void RubikCube::draw() {
 					v.push_back({ &plane[n] , DistToWatcher(plane[n].Center()) });
 			}
 
-	// »­¼ÒËã·¨ÅÅĞò
+	//ç”»å®¶ç®—æ³•æŒ‰è·ç¦»ä»è¿œåˆ°è¿‘ç»˜åˆ¶
 	sort(v.begin(), v.end(), [](const pair<Plane*, double>& a, const pair<Plane*, double>& b) {
 		return a.second > b.second;
 		});
@@ -129,12 +103,7 @@ void RubikCube::rotateZ(double degree) {
 			}
 }
 
-// ---------------------------------------------------------
-// 3. µ¥²ã¾Ö²¿Ğı×ªÊµÏÖ
-// ---------------------------------------------------------
 
-
-//Ô­
 
 void RubikCube::rotateX_Local(double degree, string dir) {
 	const Point& A = offset[1][1][1];
@@ -150,7 +119,7 @@ void RubikCube::rotateX_Local(double degree, string dir) {
 		for (int i = 0; i < D; i++)
 			for (int j = 0; j < D; j++) {
 				Point temp = offset[k][i][j] - offset[1][1][1];
-				if (acos(Cos(temp, law)) / PI * 180 >= 85) continue; // Ìø¹ı²»ÔÚ´Ë²ãµÄ·½¿é
+				if (acos(Cos(temp, law)) / PI * 180 >= 85) continue; //è·³è¿‡ä¸åœ¨ç›®æ ‡å±‚çš„å°æ–¹å—
 
 				offset[k][i][j] = Cube::rotateByVector(offset[k][i][j], A, B, degree);
 				cube[k][i][j].setOffset(offset[k][i][j]);
@@ -202,13 +171,10 @@ void RubikCube::rotateZ_Local(double degree, string dir) {
 			}
 }
 
-// ---------------------------------------------------------
-// ĞÂÔö: ½ÌÑ§Ä£Ê½ÊÓ¾õ³õÊ¼»¯¡ª¡ª½ö±£ÁôÖĞĞÄ¿éÑÕÉ«£¬ÆäËû¿éÖÃÎªÉî»Ò
-// ---------------------------------------------------------
+//æ•™å­¦æ¨¡å¼åˆå§‹çŠ¶æ€åªæ˜¾ç¤ºä¸­å¿ƒè‰²
 void RubikCube::setCentersColoredOnly() {
-	// Éî»Ò±³¾°É«£¨Óë»­Ãæ±³¾°Çø·Ö£¬µ«ÊÓ¾õÉÏÎ´ÉÏÉ«£©
+	//æœªä¸Šè‰²è´´çº¸ä½¿ç”¨æ·±ç°
 	COLORREF dark = RGB(70, 70, 70);
-	// ÏÈ°ÑËùÓĞĞ¡¿éµÄËùÓĞÃæÉèÎªÉî»Ò
 	for (int k = 0; k < D; k++)
 		for (int i = 0; i < D; i++)
 			for (int j = 0; j < D; j++) {
@@ -216,30 +182,21 @@ void RubikCube::setCentersColoredOnly() {
 					cube[k][i][j].plane[n].setColor(dark);
 			}
 
-	// Ö»°Ñ 6 ¸öÖĞĞÄÃæ°å»Ö¸´ÎªÆä±ê×¼ÑÕÉ«£¨Óë¹¹Ôìº¯ÊıÑÕÉ«Ò»ÖÂ£©
-	// Front center
+	//æ¢å¤å…­ä¸ªä¸­å¿ƒå—çš„æ ‡å‡†è‰²
 	cube[0][1][1].plane[0].setColor(RGB(0, 255, 0));
-	// Right center
 	cube[1][1][2].plane[1].setColor(RGB(235, 0, 0));
-	// Back center
 	cube[2][1][1].plane[4].setColor(RGB(62, 157, 251));
-	// Left center
 	cube[1][1][0].plane[5].setColor(RGB(255, 128, 50));
-	// Up center
 	cube[1][0][1].plane[3].setColor(RGB(255, 255, 0));
-	// Down center
 	cube[1][2][1].plane[2].setColor(RGB(235, 235, 235));
 }
 
 
-// ---------------------------------------------------------
-// 4. ¶¯»­ÓëÃüÁîÏµÍ³
-// ---------------------------------------------------------
 void RubikCube::rotate_Local(Dir dir, bool isRev) {
 	if (RotateDir == Still) {
 		RotateDir = dir;
 		isReverse = isRev;
-		// ¿ªÊ¼ĞÂÒ»´Î¾Ö²¿Ğı×ª£¬ÖØÖÃÊµÀı¶¯»­½ø¶È
+		//å¼€å§‹ä¸€æ¬¡æ–°çš„å±€éƒ¨æ—‹è½¬
 		animDegree = 0;
 	}
 }
@@ -268,7 +225,7 @@ void RubikCube::updateRotate() {
 		(this->*func)(rev * step, dir);
 	}
 	else {
-		// Íê³É×îºóÒ»²½½ÃÕı
+		//è¡¥é½æœ€åä¸€å°æ®µè§’åº¦ï¼Œé¿å…ç´¯è®¡è¯¯å·®
 		(this->*func)(rev * (PI / 2 - animDegree), dir);
 		animDegree = 0;
 		RotateDir = Still;
@@ -294,75 +251,58 @@ void RubikCube::execute() {
 	string cmd;
 	iss >> cmd;
 
-	
-	
-	if (cmd == "¡ú") {
-		// Ö±½Ó¸Ä±ä3DÄ§·½ÖáÓ³Éä
+	if (cmd == "â†’") {
+		//æ•´ä½“è½¬åŠ¨åªæ”¹å˜å¯è§†è½´æ˜ å°„
 		Point* t = Map[5];
 		Map[5] = Map[2];
 		Map[2] = Map[4];
 		Map[4] = Map[0];
 		Map[0] = t;
-
-
-
 	}
-	else if (cmd == "¡ı") {
+	else if (cmd == "â†“") {
 		Point* t = Map[3];
 		Map[3] = Map[5];
 		Map[5] = Map[1];
 		Map[1] = Map[4];
 		Map[4] = t;
-
 	}
 	else {
 		if (m.find(cmd[0]) != m.end()) {
 			rotate_Local(m[cmd[0]], cmd[1] == '\'' ? true : false);
 		}
 	}
-	
-	
-	
-	
 }
 
 bool RubikCube::isExecuteOver() {
 	return !iss.good() && isRotateOver();
 }
 
-// ---------------------------------------------------------
-// ĞÂÔö: ÔÚÁ·Ï°Ä£Ê½Ê±»æÖÆ²âÊÔ×ø±êÖá£¬ÓÃÓÚ±ê×¢ U D F B R L Ãæ
-// µ÷ÓÃÊ±ÇëÈ·±£ÔÚ pRubikcube->draw() Ö®ºóµ÷ÓÃÒÔ±ã¸²¸ÇÔÚ¶¥²ã
-// ---------------------------------------------------------
+//ç»ƒä¹ æ¨¡å¼ç»˜åˆ¶ U/D/F/B/R/L æ–¹å‘æ ‡è¯†
 void RubikCube::drawTestAxes() {
-	// cubesolver index -> Map index Ó³Éä£¨ÓÉ´úÂëºÍ¹¹Ôì³õÊ¼»¯ÍÆµ¼£©
+	//cubesolver é¢ç¼–å·åˆ°å¯è§†è½´ Map çš„æ˜ å°„
 	int cs_to_map[6] = { 1, 0, 4, 5, 2, 3 };
 
-	// ÒªÏÔÊ¾µÄ×ÖÄ¸Óë¶ÔÓ¦ cubesolver Ë÷Òı
 	vector<pair<char, int>> labels = {
 		{'U', 2}, {'D', 3}, {'F', 0}, {'B', 5}, {'R', 4}, {'L', 1}
 	};
 
-	// ÑÕÉ«Ó³Éä£¨Óë¹¹Ôìº¯ÊıÖĞÉèÖÃµÄÑÕÉ«¶ÔÓ¦£©
+	//æ ‡è¯†é¢œè‰²æ²¿ç”¨é­”æ–¹æ ‡å‡†è‰²
 	auto colorOf = [](char c) -> COLORREF {
 		switch (c) {
-		case 'U': return RGB(255, 255, 0);   // Yellow
-		case 'D': return RGB(235, 235, 235); // White
-		case 'F': return RGB(0, 255, 0);     // Green
-		case 'B': return RGB(62, 157, 251);  // Blue
-		case 'R': return RGB(235, 0, 0);     // Red
-		case 'L': return RGB(255, 128, 50);  // Orange
+		case 'U': return RGB(255, 255, 0);
+		case 'D': return RGB(235, 235, 235);
+		case 'F': return RGB(0, 255, 0);
+		case 'B': return RGB(62, 157, 251);
+		case 'R': return RGB(235, 0, 0);
+		case 'L': return RGB(255, 128, 50);
 		default:  return RGB(255, 255, 255);
 		}
 	};
 
-	// ÆÁÄ»Í¶Ó°Ê±µÄ¸¨ÖúÁãµã£¨trans ĞèÒªÒ»¸ö offset Ö¸Õë£©
 	Point zero = { 0,0,0 };
-
-	// Ä§·½ÖĞĞÄ£¨ÓÃÀ´Ëã·¨Ïß·½Ïò£©
 	Point centerCube = offset[1][1][1];
 
-	// ÉèÖÃ½Ï´ÖµÄÏß¿í
+	//æ–¹å‘æ ‡è¯†ä½¿ç”¨è¾ƒç²—çº¿æ¡
 	setlinestyle(PS_SOLID, 3, NULL, 0);
 
 	for (auto &p : labels) {
@@ -370,40 +310,35 @@ void RubikCube::drawTestAxes() {
 		int csIdx = p.second;
 		int mapIdx = cs_to_map[csIdx];
 
-		// face center ÔÚ world ¿Õ¼ä
 		Point faceCenter = *Map[mapIdx];
-
-		// ·¨Ïß·½Ïò½üËÆÎª (faceCenter - cubeCenter)
+		//é¢ä¸­å¿ƒåˆ°é­”æ–¹ä¸­å¿ƒçš„æ–¹å‘è¿‘ä¼¼ä¸ºæ³•çº¿
 		Point dir = faceCenter - centerCube;
 		double d = sqrt(dir.x*dir.x + dir.y*dir.y + dir.z*dir.z);
 		if (d < 1e-6) continue;
 
-		// ¼ÆËãÆğµã£¨Î»ÓÚÃæÍâ²à£¬±ÜÃâÖáÏß´ÓÄ§·½ÄÚ²¿ÏòÍâ»­£©
-		double startOffset = 0.35 * E; // ´ÓÃæÍâ²à¿ªÊ¼
+		//ä»é¢å¤–ä¾§å¼€å§‹ç»˜åˆ¶ï¼Œé¿å…çº¿æ¡ç©¿è¿‡é­”æ–¹å†…éƒ¨
+		double startOffset = 0.35 * E;
 		Point start = faceCenter + dir * (startOffset / d);
 
-		// axis ³¤¶È£¨ÒÔ world µ¥Î»Îª×¼£©
-		double axisLen = E * 1.6; // ¸ü³¤µÄÖá
+		double axisLen = E * 1.6;
 		Point tip = faceCenter + dir * (axisLen / d);
 
-		// Í¶Ó°µ½ÆÁÄ»×ø±ê
 		POINT ps = start.trans(&zero);
 		POINT pt = tip.trans(&zero);
 
-		// »æÖÆÖáÏßÓë¼ıÍ·/ÎÄ×Ö
 		COLORREF baseCol = colorOf(ch);
-		// »ìºÏÑÕÉ«Ê¹ÖáÏßºÍ¼ıÍ·¸üÍ»³ö£¨ÓëÃæÉ«ĞÎ³É¶Ô±È£©
+		//æäº®é¢œè‰²ï¼Œé¿å…ä¸é¢è‰²æ··åœ¨ä¸€èµ·
 		COLORREF blended = RGB((GetRValue(baseCol) + 190) / 2, (GetGValue(baseCol) + 190) / 2, (GetBValue(baseCol) + 190) / 2);
 		setlinecolor(blended);
 		line(ps.x, ps.y, pt.x, pt.y);
 
-		// ÎÄ×Ö£¨Æ«ÒÆÒ»µãÒÔÃâÓëÏßÖØºÏ£©
+		//æ–‡å­—ç•¥å¾®åç§»ï¼Œé¿å…å‹åœ¨çº¿ä¸Š
 		settextcolor(blended);
 		setbkmode(TRANSPARENT);
 		std::string s(1, ch);
 		outtextxy(pt.x + 8, pt.y + 8, s.c_str());
 
-		// »æÖÆ¼ıÍ·£¨ÔÚÆÁÄ»¿Õ¼ä¹¹ÔìÒ»¸öĞ¡Èı½ÇĞÎ£©
+		//å±å¹•ç©ºé—´æ„é€ ç®­å¤´ä¸‰è§’å½¢
 		double dx = pt.x - ps.x;
 		double dy = pt.y - ps.y;
 		double dist = sqrt(dx*dx + dy*dy);
@@ -413,7 +348,7 @@ void RubikCube::drawTestAxes() {
 			double arrowLen = min(24.0, dist * 0.15);
 			double arrowW = arrowLen * 0.6;
 			POINT base = { (LONG)(pt.x - ux * arrowLen), (LONG)(pt.y - uy * arrowLen) };
-			// perpendicular
+			//å‚ç›´æ–¹å‘
 			double px = -uy, py = ux;
 			POINT p1 = { pt.x, pt.y };
 			POINT p2 = { (LONG)(base.x + px * arrowW), (LONG)(base.y + py * arrowW) };
@@ -424,14 +359,14 @@ void RubikCube::drawTestAxes() {
 		}
 	}
 
-	// »Ö¸´Ä¬ÈÏÏß¿í
+	//æ¢å¤é»˜è®¤çº¿å®½
 	setlinestyle(PS_SOLID, 1, NULL, 0);
 }
 
 bool RubikCube::pickStickerAtScreen(int mx, int my, int &out_k, int &out_i, int &out_j, int &out_planeIndex) {
-	// Ñ°ÕÒËùÓĞÃæÖĞ°üº¬µã (mx,my) µÄÏî£¬Ñ¡Ôñ¾àÀë¹Û²ìÕß×î½üµÄ£¨DistToWatcher Öµ×îĞ¡£©
+	//å¤šä¸ªé¢å‘½ä¸­æ—¶é€‰æ‹©ç¦»è§‚å¯Ÿè€…æœ€è¿‘çš„è´´çº¸
 	double bestDepth = 1e12;
-	int bk=-1, bi=-1, bj=-1, bp=-1;
+	int bk = -1, bi = -1, bj = -1, bp = -1;
 	for (int k = 0; k < D; ++k) {
 		for (int i = 0; i < D; ++i) {
 			for (int j = 0; j < D; ++j) {
@@ -439,7 +374,7 @@ bool RubikCube::pickStickerAtScreen(int mx, int my, int &out_k, int &out_i, int 
 				for (int p = 0; p < 6; ++p) {
 					if (planes[p].containsScreenPoint(mx, my, &offset[k][i][j])) {
 						double depth = DistToWatcher(planes[p].Center());
-						// Ñ¡Ôñ×î½üµÄ£¨×îĞ¡¾àÀë£©
+						//ä¿ç•™æœ€å‰é¢çš„å‘½ä¸­é¢
 						if (depth < bestDepth) {
 							bestDepth = depth;
 							bk = k; bi = i; bj = j; bp = p;
@@ -469,152 +404,46 @@ void RubikCube::clearAllHighlights() {
 			}
 }
 
-
-
-
-
-// ĞÂÔö£ºÉèÖÃ¿ÉÊÓÌùÖ½ÑÕÉ«£¨²»ĞŞ¸ÄÂß¼­ Cube£©
+//åªæ”¹å˜å¯è§†è´´çº¸é¢œè‰²
 void RubikCube::setStickerColorVisual(int k, int i, int j, int planeIndex, COLORREF col) {
-	if (k<0||k>=D||i<0||i>=D||j<0||j>=D||planeIndex<0||planeIndex>=6) return;
+	if (k < 0 || k >= D || i < 0 || i >= D || j < 0 || j >= D || planeIndex < 0 || planeIndex >= 6) return;
 	Plane* planes = cube[k][i][j].getPlanes();
 	planes[planeIndex].setColor(col);
 }
 
-// ĞÂÔö£º°ÑÌùÖ½Ó³Éäµ½Âß¼­ÃæÓë¸ñ×Ó
-//v0
-/*
-bool RubikCube::mapStickerToFace(int k, int i, int j, int planeIndex, int &outFace, int &outR, int &outC) {
-	// plane index mapping to cubesolver face
-	// plane 0: Front (F=0)
-	// plane 1: Right (R=4)
-	// plane 2: Down  (D=3)
-	// plane 3: Up    (U=2)
-	// plane 4: Back  (B=5)
-	// plane 5: Left  (L=1)
-	switch (planeIndex) {
-	case 0: outFace = F; outR = i; outC = j; return true; // Front
-	case 1: outFace = R; outR = i; outC = 2 - k; return true; // Right
-	case 4: outFace = B; outR = i; outC = 2 - j; return true; // Back
-	case 5: outFace = L; outR = i; outC = k; return true; // Left
-	case 3: outFace = U; outR = j; outC = k; return true; // Up
-	case 2: outFace = D; outR = 2 - j; outC = k; return true; // Down
-	default: return false;
-	}
-}
-*/
-
-
-//v1
-/*
-bool RubikCube::mapStickerToFace(int k, int i, int j, int p, int& face, int& r, int& c) const {
-	// p ÊÇÊó±êµã»÷µ½µÄ plane ±àºÅ (0~5)
-	// ¸ù¾İÄãµÄäÖÈ¾´úÂë£¬·´ÍÆ r(ĞĞ) ºÍ c(ÁĞ)
-
-	switch (p) {
-	case 0: // Front Ãæ (Ç°Ãæ)
-		face = F;
-		r = i;
-		c = j;
-		return true;
-
-	case 1: // Right Ãæ (ÓÒÃæ)
-		face = R;
-		r = i;
-		// ¡¾¹Ø¼ü¾ÀÕı¡¿Æ¥ÅääÖÈ¾Ê±µÄ srcCube[R][r][2 - k]
-		c = 2 - k;
-		return true;
-
-	case 2: // Back Ãæ (ºóÃæ)
-		face = B;
-		r = i;
-		// ´Ó±³Ãæ¿´£¬ÎïÀíÉÏµÄÓÒ²à(j=2)ÆäÊµÊÇ±³ÃæµÄ×ó²à(c=0)
-		c = 2 - j;
-		return true;
-
-	case 3: // Left Ãæ (×óÃæ)
-		face = L;
-		r = i;
-		// ´Ó×óÃæ¿´£¬ÎïÀíÉÏµÄ¿¿ºó(k=2)ÊÇ×óÃæµÄ×ó²à(c=0)
-		c = k;
-		return true;
-
-	case 4: // Up Ãæ (¶¥Ãæ)
-		face = U;
-		// ¶¥Ãæ¸©ÊÓ£º¿¿ºó(k=2)ÊÇµÚ0ĞĞ£¬¿¿Ç°(k=0)ÊÇµÚ2ĞĞ
-		r = 2 - k;
-		c = j;
-		return true;
-
-	case 5: // Down Ãæ (µ×Ãæ)
-		face = D;
-		// µ×ÃæÑöÊÓ£º¿¿Ç°(k=0)ÊÇµÚ0ĞĞ£¬¿¿ºó(k=2)ÊÇµÚ2ĞĞ
-		r = k;
-		c = j;
-		return true;
-
-	default:
-		return false;
-	}
-}
-*/
-
-
-
-
-// ---------------------------------------------------------
-// ¡¾ĞŞÕı°æ v4¡¿Ä£¿é»¯¶ÀÁ¢µ÷Õû
-// ---------------------------------------------------------
+//ç‰©ç†è´´çº¸æ˜ å°„åˆ°é€»è¾‘ Cube çš„é¢å’Œè¡Œåˆ—
 bool RubikCube::mapStickerToFace(int k, int i, int j, int planeIndex, int& outFace, int& outR, int& outC) {
 	switch (planeIndex) {
-		// =========================================================
-		// 1. Front (F) - Green - plane 0
-		// =========================================================
 	case 0:
 		outFace = F;
-		// ÏÈ³¢ÊÔÕâ¸ö×éºÏ£¬Èç¹û²»¶ÔÔÙ»»
 		outR = i;
 		outC = j;
 		return true;
 
-		// =========================================================
-		// 2. Right (R) - Red - plane 1
-		// =========================================================
 	case 1:
 		outFace = R;
 		outR = i;
 		outC = k;
 		return true;
 
-		// =========================================================
-		// 3. Back (B) - Blue - plane 4
-		// =========================================================
 	case 4:
 		outFace = B;
 		outR = i;
 		outC = 2 - j;
 		return true;
 
-		// =========================================================
-		// 4. Left (L) - Orange - plane 5
-		// =========================================================
 	case 5:
 		outFace = L;
 		outR = i;
-		outC = 2-k;
+		outC = 2 - k;
 		return true;
 
-		// =========================================================
-		// 5. Up (U) - Yellow - plane 3
-		// =========================================================
 	case 3:
 		outFace = U;
-		outR = 2-k;
+		outR = 2 - k;
 		outC = j;
 		return true;
 
-		// =========================================================
-		// 6. Down (D) - White - plane 2
-		// =========================================================
 	case 2:
 		outFace = D;
 		outR = k;
@@ -626,236 +455,54 @@ bool RubikCube::mapStickerToFace(int k, int i, int j, int planeIndex, int& outFa
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ĞŞ¿¨ËÀ
-//v0
-/*
-// ---------------------------------------------------------
-// ĞÂÔö: ¸ù¾İÂß¼­Êı×éÖØ»æËùÓĞÑÕÉ« (½ÌÑ§Ä£Ê½×¨ÓÃ)
-// Ç°Ìá: RubikCube ±ØĞë´¦ÓÚ³õÊ¼Î´Ğı×ª×´Ì¬!
-// ---------------------------------------------------------
+//æŒ‰é€»è¾‘ Cube é‡ç»˜å¯è§†è´´çº¸é¢œè‰²
 void RubikCube::recolorFromLogicalCube(char srcCube[6][3][3]) {
-	// ¸¨Öú lambda: °Ñ×Ö·ûÑÕÉ«×ªÎª RGB
+	//é€»è¾‘é¢œè‰²å­—ç¬¦è½¬ä¸ºç»˜åˆ¶é¢œè‰²
 	auto charToColor = [](char c) -> COLORREF {
 		switch (c) {
-		case 'G': return RGB(0, 255, 0);       // Front (Green)
-		case 'R': return RGB(235, 0, 0);       // Right (Red)
-		case 'B': return RGB(62, 157, 251);    // Back (Blue)
-		case 'O': return RGB(255, 128, 50);    // Left (Orange)
-		case 'Y': return RGB(255, 255, 0);     // Up (Yellow)
-		case 'W': return RGB(235, 235, 235);   // Down (White)
-		default:  return RGB(70, 70, 70);       // Î´ÉÏÉ« (Éî»Ò)
+		case 'G': return RGB(0, 255, 0);
+		case 'R': return RGB(235, 0, 0);
+		case 'B': return RGB(62, 157, 251);
+		case 'O': return RGB(255, 128, 50);
+		case 'Y': return RGB(255, 255, 0);
+		case 'W': return RGB(235, 235, 235);
+		default:  return RGB(70, 70, 70);
 		}
-		};
+	};
 
-	// ±éÀúÂß¼­Êı×éµÄ 6 ¸öÃæ£¬¸ù¾İ mapStickerToFace µÄÄæÓ³Éä£¬ÉèÖÃÎïÀíÌùÖ½ÑÕÉ«
-	// ÎÒÃÇĞèÒªÊÖ¶¯×öÒ»¸ö·´ÏòÓ³Éä£º(Face, r, c) -> (k, i, j, planeIndex)
-
-	// 1. Front (F) -> plane 0
-	for (int r = 0; r < 3; r++)
-		for (int c = 0; c < 3; c++)
-			cube[0][r][c].plane[0].setColor(charToColor(srcCube[F][r][c]));
-
-	// 2. Right (R) -> plane 1
-	for (int r = 0; r < 3; r++)
-		for (int k = 0; k < 3; k++)
-			cube[k][r][2].plane[1].setColor(charToColor(srcCube[R][r][2 - k]));
-
-	// 3. Back (B) -> plane 4
-	for (int r = 0; r < 3; r++)
-		for (int c = 0; c < 3; c++)
-			cube[2][r][c].plane[4].setColor(charToColor(srcCube[B][r][2 - c]));
-
-	// 4. Left (L) -> plane 5
-	for (int r = 0; r < 3; r++)
-		for (int k = 0; k < 3; k++)
-			cube[k][r][0].plane[5].setColor(charToColor(srcCube[L][r][k]));
-
-	// 5. Up (U) -> plane 3
-	for (int c = 0; c < 3; c++)
-		for (int k = 0; k < 3; k++)
-			cube[k][0][c].plane[3].setColor(charToColor(srcCube[U][c][k]));
-
-	// 6. Down (D) -> plane 2
-	for (int c = 0; c < 3; c++)
-		for (int k = 0; k < 3; k++)
-			cube[k][2][c].plane[2].setColor(charToColor(srcCube[D][2 - c][k]));
-}
-
-*/
-
-//v1
-
-/*
-// ---------------------------------------------------------
-// ĞŞÕı°æ£º¸ù¾İÂß¼­Êı×éÖØ»æËùÓĞÑÕÉ« (½ÌÑ§Ä£Ê½×¨ÓÃ)
-// ÑÏ¸ñ¶ÔÓ¦ mapStickerToFace µÄÄæÓ³Éä
-// ---------------------------------------------------------
-void RubikCube::recolorFromLogicalCube(char srcCube[6][3][3]) {
-	// ¸¨Öú lambda: °Ñ×Ö·ûÑÕÉ«×ªÎª RGB
-	auto charToColor = [](char c) -> COLORREF {
-		switch (c) {
-		case 'G': return RGB(0, 255, 0);       // Front (Green)
-		case 'R': return RGB(235, 0, 0);       // Right (Red)
-		case 'B': return RGB(62, 157, 251);    // Back (Blue)
-		case 'O': return RGB(255, 128, 50);    // Left (Orange)
-		case 'Y': return RGB(255, 255, 0);     // Up (Yellow)
-		case 'W': return RGB(235, 235, 235);   // Down (White)
-		default:  return RGB(70, 70, 70);       // Î´ÉÏÉ« (Éî»Ò)
-		}
-		};
-
-	// =========================================================
-	// 1. Front (F) - plane 0
-	// mapStickerToFace: outFace=F, outR=i, outC=j
-	// =========================================================
-	for (int r = 0; r < 3; r++)
-		for (int c = 0; c < 3; c++)
-			cube[0][r][c].plane[0].setColor(charToColor(srcCube[F][r][c]));
-
-	// =========================================================
-	// 2. Right (R) - plane 1
-	// mapStickerToFace: outFace=R, outR=i, outC=2-k
-	// =========================================================
-	for (int r = 0; r < 3; r++)
-		for (int k = 0; k < 3; k++)
-			cube[k][r][2].plane[1].setColor(charToColor(srcCube[R][r][2 - k]));
-
-	// =========================================================
-	// 3. Back (B) - plane 4
-	// mapStickerToFace: outFace=B, outR=i, outC=2-j
-	// =========================================================
-	for (int r = 0; r < 3; r++)
-		for (int j = 0; j < 3; j++)
-			cube[2][r][j].plane[4].setColor(charToColor(srcCube[B][r][2 - j]));
-
-	// =========================================================
-	// 4. Left (L) - plane 5
-	// mapStickerToFace: outFace=L, outR=i, outC=k
-	// =========================================================
-	for (int r = 0; r < 3; r++)
-		for (int k = 0; k < 3; k++)
-			cube[k][r][0].plane[5].setColor(charToColor(srcCube[L][r][k]));
-
-	// =========================================================
-	// 5. Up (U) - plane 3
-	// mapStickerToFace: outFace=U, outR=j, outC=k
-	// =========================================================
-	for (int j = 0; j < 3; j++)
-		for (int k = 0; k < 3; k++)
-			cube[k][0][j].plane[3].setColor(charToColor(srcCube[U][j][k]));
-
-	// =========================================================
-	// 6. Down (D) - plane 2 (¡¾¹Ø¼üĞŞÕı¡¿ÕâÀïÖ®Ç°Ğ´´íÁË£¡)
-	// mapStickerToFace: outFace=D, outR=2-j, outC=k
-	// =========================================================
-	for (int j = 0; j < 3; j++)
-		for (int k = 0; k < 3; k++)
-			cube[k][2][j].plane[2].setColor(charToColor(srcCube[D][2 - j][k]));
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ---------------------------------------------------------
-// ¡¾ĞŞÕı°æ v2¡¿¸ù¾İÂß¼­Êı×éÖØ»æËùÓĞÑÕÉ«
-// Ä¿±ê£ºÈÃÆÁÄ»ÊÓ¾õÏÔÊ¾ÓëÖÕ¶Ë´òÓ¡µÄ Cube[face][row][col] ÍêÈ«Ò»ÖÂ
-// ---------------------------------------------------------
-void RubikCube::recolorFromLogicalCube(char srcCube[6][3][3]) {
-	// ¸¨Öú lambda: °Ñ×Ö·ûÑÕÉ«×ªÎª RGB
-	auto charToColor = [](char c) -> COLORREF {
-		switch (c) {
-		case 'G': return RGB(0, 255, 0);       // Front (Green)
-		case 'R': return RGB(235, 0, 0);       // Right (Red)
-		case 'B': return RGB(62, 157, 251);    // Back (Blue)
-		case 'O': return RGB(255, 128, 50);    // Left (Orange)
-		case 'Y': return RGB(255, 255, 0);     // Up (Yellow)
-		case 'W': return RGB(235, 235, 235);   // Down (White)
-		default:  return RGB(70, 70, 70);       // Î´ÉÏÉ« (Éî»Ò)
-		}
-		};
-
-	// =========================================================
-	// 1. Front (F) - Green - plane 0
-	// ¶ÔÓ¦ cube[0][i][j].plane[0]
-	// =========================================================
+	//å‰é¢ï¼šcube[0][i][j].plane[0]
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++)
 			cube[0][i][j].plane[0].setColor(charToColor(srcCube[F][i][j]));
 
-	// =========================================================
-	// 2. Right (R) - Red - plane 1
-	// ¶ÔÓ¦ cube[k][i][2].plane[1]
-	// ¡¾ĞŞÕı¡¿¸ù¾İÄãµÄ·´À¡£¬ÕâÀïÖ±½Ó°´ k ×÷ÎªÁĞ£¬²»ÔÙÈ¡·´
-	// =========================================================
-	for (int i = 0; i < 3; i++)      // i ÊÇĞĞ
-		for (int k = 0; k < 3; k++)  // k ÊÇÁĞ
+	//å³é¢ï¼šcube[k][i][2].plane[1]
+	for (int i = 0; i < 3; i++)
+		for (int k = 0; k < 3; k++)
 			cube[k][i][2].plane[1].setColor(charToColor(srcCube[R][i][k]));
 
-	// =========================================================
-	// 3. Back (B) - Blue - plane 4
-	// ¶ÔÓ¦ cube[2][i][j].plane[4]
-	// =========================================================
+	//åé¢ï¼šcube[2][i][j].plane[4]
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++)
 			cube[2][i][j].plane[4].setColor(charToColor(srcCube[B][i][j]));
 
-	// =========================================================
-	// 4. Left (L) - Orange - plane 5
-	// ¶ÔÓ¦ cube[k][i][0].plane[5]
-	// =========================================================
+	//å·¦é¢ï¼šcube[k][i][0].plane[5]
 	for (int i = 0; i < 3; i++)
 		for (int k = 0; k < 3; k++)
 			cube[k][i][0].plane[5].setColor(charToColor(srcCube[L][i][k]));
 
-	// =========================================================
-	// 5. Up (U) - Yellow - plane 3
-	// ¶ÔÓ¦ cube[k][0][j].plane[3]
-	// ¡¾ĞŞÕı¡¿¸ù¾İÄãµÄ·´À¡ (OOO/YYY/YYY -> OYY/OYY/OYY)
-	// ÕâÀï×öÁË×ªÖÃ´¦Àí£ºÊÓ¾õĞĞ = Âß¼­ÁĞ£¬ÊÓ¾õÁĞ = Âß¼­ĞĞ
-	// =========================================================
-	for (int j = 0; j < 3; j++)      // j ÊÇÂß¼­ĞĞ£¬ÏÖÔÚ×÷ÎªÊÓ¾õÁĞ
-		for (int k = 0; k < 3; k++)  // k ÊÇÂß¼­ÁĞ£¬ÏÖÔÚ×÷ÎªÊÓ¾õĞĞ
+	//é¡¶é¢æ˜¾ç¤ºéœ€è¦è½¬ç½®é€»è¾‘è¡Œåˆ—
+	for (int j = 0; j < 3; j++)
+		for (int k = 0; k < 3; k++)
 			cube[k][0][j].plane[3].setColor(charToColor(srcCube[U][j][k]));
 
-	// =========================================================
-	// 6. Down (D) - White - plane 2
-	// ¶ÔÓ¦ cube[k][2][j].plane[2]
-	// ¡¾ĞŞÕı¡¿¸ù¾İÄãµÄ·´À¡ (WWW/WWW/RRR -> WWR/WWR/WWR)
-	// ÕâÀï×öÁË×ªÖÃ´¦Àí
-	// =========================================================
+	//åº•é¢æ˜¾ç¤ºéœ€è¦è½¬ç½®é€»è¾‘è¡Œåˆ—
 	for (int j = 0; j < 3; j++)
 		for (int k = 0; k < 3; k++)
 			cube[k][2][j].plane[2].setColor(charToColor(srcCube[D][j][k]));
 }
 
-
 void RubikCube::resetMap() {
-	// »Ö¸´Îª¹¹Ôìº¯ÊıÖĞµÄ³õÊ¼Ó³Éä
+	//æ¢å¤åˆå§‹å¯è§†è½´æ˜ å°„
 	Map = {
 		&offset[1][1][0],
 		&offset[0][1][1],

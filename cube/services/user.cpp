@@ -1,39 +1,34 @@
-#include "user.h"
+ï»¿#include "user.h"
 
-static string g_currentUser = "ÓÎ¿Í"; // ¾²Ì¬È«¾Ö±äÁ¿
+static string g_currentUser = "æ¸¸å®¢";
 
 void setCurrentUser(const string& username) {
-    g_currentUser = username.empty() ? "ÓÎ¿Í" : username;
+    g_currentUser = username.empty() ? "æ¸¸å®¢" : username;
 }
 
 string getCurrentUser() {
     return g_currentUser;
 }
 
+//ç»˜åˆ¶å³ä¸Šè§’ç”¨æˆ·åï¼Œç»“æŸåæ¢å¤ EasyX ç»˜å›¾çŠ¶æ€
 void drawCurrentUser(int screenWidth) {
-    // 1. ±£´æ»æÍ¼×´Ì¬
     COLORREF saveText = gettextcolor();
     int saveBk = getbkmode();
     LOGFONT saveFont;
     gettextstyle(&saveFont);
 
-    // 2. ÉèÖÃÑùÊ½
     setbkmode(TRANSPARENT);
     settextcolor(WHITE);
-    settextstyle(25, 0, _T("Î¢ÈíÑÅºÚ"));
+    settextstyle(25, 0, _T("å¾®è½¯é›…é»‘"));
 
-    // 3. Æ´½ÓÎÄ×Ö
-    string displayStr = "ID£º" + g_currentUser;
-
-    // 4. »æÖÆ£¨ÓÒÉÏ½Ç£¬¾àÀëÓÒ±ß  px£¬¾àÀë¶¥²¿  px£©
+    string displayStr = "IDï¼š" + g_currentUser;
     outtextxy(screenWidth - 300, 25, displayStr.c_str());
 
-    // 5. »Ö¸´×´Ì¬
     settextcolor(saveText);
     setbkmode(saveBk);
     settextstyle(&saveFont);
 }
 
 bool isGuest() {
-    return (g_currentUser == "ÓÎ¿Í");
+    return (g_currentUser == "æ¸¸å®¢");
 }

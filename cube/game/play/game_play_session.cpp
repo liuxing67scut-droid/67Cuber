@@ -1,4 +1,4 @@
-#include "game_internal.h"
+﻿#include "game_internal.h"
 
 void clearTeachSelection(MainViewState& viewState) {
 	RubikCube*& pRubikcube = g_app.pRubikcube;

@@ -31,7 +31,7 @@ void init(char cube[][3][3])
 void random(char cube[][3][3], int N)
 {
 	if (!isSrand)
-		srand(time(NULL)), isSrand = 1;
+		srand(static_cast<unsigned int>(time(nullptr))), isSrand = 1;
 	for (int i = 0; i < N; i++)
 	{
 		int rnd = rand() % 8;
@@ -71,7 +71,7 @@ void random(char cube[][3][3], int N)
 void random_practice(char cube[][3][3], int N)
 {
 	if (!isSrand)
-		srand(time(NULL)), isSrand = 1;
+		srand(static_cast<unsigned int>(time(nullptr))), isSrand = 1;
 	for (int i = 0; i < N; i++)
 	{
 		int rnd = rand() % 6; // only 0..5 -> face rotations

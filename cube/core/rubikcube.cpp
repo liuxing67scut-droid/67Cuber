@@ -94,8 +94,8 @@ void RubikCube::draw() {
 		return a.second > b.second;
 		});
 
-	int size = v.size();
-	for (int i = 0; i < size; i++)
+	size_t size = v.size();
+	for (size_t i = 0; i < size; i++)
 		v[i].first->draw();
 }
 

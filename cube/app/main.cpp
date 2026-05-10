@@ -1,11 +1,9 @@
-﻿/*
-魔方助手
-67 Cuber
-*/
+﻿//67Cuber
 
 #include "game.h"
 
 int main(int argc, char* argv[]) {
+	
 	//初始化运行环境
 	initGameApp(argv[0]);
 

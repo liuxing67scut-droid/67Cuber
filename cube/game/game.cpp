@@ -50,7 +50,7 @@ void runGameApp() {
 	}
 
 	FlushBatchDraw();
-	Sleep(0.01);
+	Sleep(1);
 	if (msg.uMsg == WM_LBUTTONDOWN) {
 		msg.uMsg = 0;
 	}

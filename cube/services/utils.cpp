@@ -17,7 +17,7 @@ void initWinPos_Title(string Title, string newTitle) {
 
 
 string getPathName(string path) {
-	int pos = path.find_last_of('\\');
+	string::size_type pos = path.find_last_of('\\');
 	if (pos != string::npos)path = path.substr(pos + 1);
 	pos = path.find_last_of('.');
 	return path.substr(0, pos);

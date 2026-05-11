@@ -1,5 +1,7 @@
 ﻿#include "game_state.h"
 
+#include "ui_select_cover.h"
+
 #include <iostream>
 
 //选择魔方页，负责进入3阶游戏并初始化默认运行状态
@@ -23,8 +25,7 @@ void handleSelectPage(MainViewState& viewState) {
 	Button& btnBack = g_ui.select.back;
 
 	setorigin(0, 0);
-	setbkcolor(UIConfig::COL_BG);
-	drawTitle(150, "选择魔方");
+	drawSelectCover();
 
 	if (btn3x3.draw(msg)) {
 		std::cout << "3x3" << std::endl;

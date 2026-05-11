@@ -1,5 +1,7 @@
 ﻿#include "game_state.h"
 
+#include "ui_menu_cover.h"
+
 //菜单页入口
 void handleMenuPage() {
 	GameState& state = g_app.state;
@@ -9,8 +11,7 @@ void handleMenuPage() {
 	LoginPanel& loginPanel = g_ui.loginPanel;
 
 	setorigin(0, 0);
-	setbkcolor(UIConfig::COL_BG);
-	drawTitle(150, "67 Cuber");
+	drawMenuCover();
 
 	bool guestClick = btnGuestEnter.draw(msg);
 	bool loginClick = btnUserLogin.draw(msg);

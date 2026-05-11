@@ -1,5 +1,7 @@
 ﻿#include "user.h"
 
+#include "ui.h"
+
 static string g_currentUser = "游客";
 
 void setCurrentUser(const string& username) {
@@ -18,7 +20,7 @@ void drawCurrentUser(int screenWidth) {
     gettextstyle(&saveFont);
 
     setbkmode(TRANSPARENT);
-    settextcolor(WHITE);
+    settextcolor(UIConfig::COL_HUD_TEXT);
     settextstyle(25, 0, _T("微软雅黑"));
 
     string displayStr = "ID：" + g_currentUser;

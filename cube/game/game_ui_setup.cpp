@@ -5,11 +5,13 @@ static void initMenuButtons() {
 	Button& btnGuestEnter = g_ui.menu.guestEnter;
 	Button& btnUserLogin = g_ui.menu.userLogin;
 
-	btnGuestEnter.setRect((Width - 200) / 2, 300, 200, 60);
+	btnGuestEnter.setRect((Width - 200) / 2, 360, 200, 60);
 	btnGuestEnter.setText("游客进入");
+	btnGuestEnter.setVisualStyle(BUTTON_STYLE_LARGE);
 
-	btnUserLogin.setRect((Width - 200) / 2, 400, 200, 60);
+	btnUserLogin.setRect((Width - 200) / 2, 460, 200, 60);
 	btnUserLogin.setText("用户登录");
+	btnUserLogin.setVisualStyle(BUTTON_STYLE_LARGE);
 }
 
 //配置魔方选择页按钮
@@ -20,9 +22,11 @@ static void initSelectButtons() {
 
 	btn3x3.setRect((Width - 200) / 2, 300, 200, 60);
 	btn3x3.setText("3 阶魔方");
+	btn3x3.setVisualStyle(BUTTON_STYLE_LARGE);
 
 	btn2x2.setRect((Width - 200) / 2, 400, 200, 60);
 	btn2x2.setText("敬请期待");
+	btn2x2.setVisualStyle(BUTTON_STYLE_LARGE);
 
 	btnBack.setRect(20, 20, 80, 30);
 	btnBack.setText("< 返回");

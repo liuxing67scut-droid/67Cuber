@@ -1,5 +1,10 @@
 ﻿#include "plane.h"
 
+namespace {
+const COLORREF CUBE_EDGE_COLOR = RGB(72, 50, 32);
+const int CUBE_EDGE_WIDTH = 2;
+}
+
 Plane::Plane(const Point* a, const Point* b, const Point* c, const Point* d) {
 	bindPoint(a, b, c, d);
 }
@@ -55,7 +60,8 @@ void Plane::setHighlight(bool h) {
 
 void Plane::draw() const {
 	setfillcolor(color);
-	setlinecolor(RGB(100, 100, 100));
+	setlinecolor(CUBE_EDGE_COLOR);
+	setlinestyle(PS_SOLID, CUBE_EDGE_WIDTH, NULL, 0);
 
 	POINT point[4] = {
 		p[0]->trans(offset),
@@ -74,9 +80,11 @@ void Plane::draw() const {
 			int ni = (i + 1) % 4;
 			line(point[i].x, point[i].y, point[ni].x, point[ni].y);
 		}
-		setlinecolor(RGB(100, 100, 100));
+		setlinecolor(CUBE_EDGE_COLOR);
 		setlinestyle(PS_SOLID, 1, NULL, 0);
 	}
+
+	setlinestyle(PS_SOLID, 1, NULL, 0);
 }
 
 bool operator>(const Plane& a, const Plane& b) {

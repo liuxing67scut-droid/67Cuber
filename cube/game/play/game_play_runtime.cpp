@@ -37,7 +37,7 @@ static void drawGameHud() {
 
 	setorigin(0, 0);
 	std::string timeStr = solveTimer.format();
-	settextcolor(RGB(235, 235, 235));
+	settextcolor(UIConfig::COL_HUD_TEXT);
 	setbkmode(TRANSPARENT);
 	settextstyle(36, 0, _T("Microsoft YaHei"));
 	outtextxy((Width - textwidth(timeStr.c_str())) / 2, 80, timeStr.c_str());
@@ -69,15 +69,27 @@ static void handleModeTabButtons(MainViewState& viewState) {
 	}
 }
 
+static void drawModeTabHighlightAt(int x, int y) {
+	const int padding = 4;
+	setlinecolor(UIConfig::COL_MODE_ACTIVE_BORDER);
+	setlinestyle(PS_SOLID, UIConfig::MODE_ACTIVE_BORDER_WIDTH);
+	roundrect(x - padding, y - padding, x + MODE_BTN_W + padding, y + MODE_BTN_H + padding, 12, 12);
+	setlinestyle(PS_SOLID, 1);
+}
+
 //高亮当前游戏模式
 static void drawCurrentModeTabHighlight() {
 	PlayMode& currentMode = g_app.currentMode;
 
-	COLORREF hl = RGB(200, 200, 200);
-	setlinecolor(hl);
-	if (currentMode == PLAY_MODE_AUTO) roundrect(MODE_START_X, MODE_Y, MODE_START_X + MODE_BTN_W, MODE_Y + MODE_BTN_H, 8, 8);
-	if (currentMode == PLAY_MODE_PRACTICE) roundrect(MODE_START_X + (MODE_BTN_W + MODE_GAP), MODE_Y, MODE_START_X + (MODE_BTN_W + MODE_GAP) + MODE_BTN_W, MODE_Y + MODE_BTN_H, 8, 8);
-	if (currentMode == PLAY_MODE_TEACH) roundrect(MODE_START_X + (MODE_BTN_W + MODE_GAP) * 2, MODE_Y, MODE_START_X + (MODE_BTN_W + MODE_GAP) * 2 + MODE_BTN_W, MODE_Y + MODE_BTN_H, 8, 8);
+	if (currentMode == PLAY_MODE_AUTO) {
+		drawModeTabHighlightAt(MODE_START_X, MODE_Y);
+	}
+	if (currentMode == PLAY_MODE_PRACTICE) {
+		drawModeTabHighlightAt(MODE_START_X + (MODE_BTN_W + MODE_GAP), MODE_Y);
+	}
+	if (currentMode == PLAY_MODE_TEACH) {
+		drawModeTabHighlightAt(MODE_START_X + (MODE_BTN_W + MODE_GAP) * 2, MODE_Y);
+	}
 }
 
 //处理设置面板和排行榜面板

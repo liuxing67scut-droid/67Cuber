@@ -1,5 +1,7 @@
 ﻿#include "game_internal.h"
 
+#include "ui_play_cover.h"
+
 //游戏页单帧主流程，按输入、按钮、场景、浮层顺序调度
 bool handleGamePage(MainViewState& viewState) {
 	GameState& state = g_app.state;
@@ -10,7 +12,8 @@ bool handleGamePage(MainViewState& viewState) {
 		return false;
 	}
 
-	setbkcolor(RGB(35, 35, 35));
+	setorigin(0, 0);
+	drawPlayBackground();
 	setorigin(Width / 2, Height / 2);
 
 	bool userInteracted = processGameCameraInput(viewState);

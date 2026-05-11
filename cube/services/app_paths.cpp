@@ -116,6 +116,11 @@ std::string getAppRootPath() {
     return g_appRootPath;
 }
 
+//获取图片资源文件路径
+std::string getImagePath(const std::string& fileName) {
+    return joinPath(joinPath(g_appRootPath, "image"), fileName);
+}
+
 //获取音乐资源文件路径
 std::string getMusicPath(const std::string& fileName) {
     return joinPath(joinPath(g_appRootPath, "music"), fileName);

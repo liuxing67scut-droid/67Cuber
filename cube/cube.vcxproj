@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -149,6 +149,10 @@
     <ClCompile Include="core\rubikcube.cpp" />
     <ClCompile Include="services\timer.cpp" />
     <ClCompile Include="ui\ui.cpp" />
+    <ClCompile Include="ui\ui_image.cpp" />
+    <ClCompile Include="ui\ui_menu_cover.cpp" />
+    <ClCompile Include="ui\ui_play_cover.cpp" />
+    <ClCompile Include="ui\ui_select_cover.cpp" />
     <ClCompile Include="services\user.cpp" />
     <ClCompile Include="services\utils.cpp" />
   </ItemGroup>
@@ -167,6 +171,10 @@
     <ClInclude Include="core\rubikcube.h" />
     <ClInclude Include="services\timer.h" />
     <ClInclude Include="ui\ui.h" />
+    <ClInclude Include="ui\ui_image.h" />
+    <ClInclude Include="ui\ui_menu_cover.h" />
+    <ClInclude Include="ui\ui_play_cover.h" />
+    <ClInclude Include="ui\ui_select_cover.h" />
     <ClInclude Include="services\user.h" />
     <ClInclude Include="services\utils.h" />
   </ItemGroup>

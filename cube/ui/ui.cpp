@@ -6,10 +6,10 @@
 #include <sstream>
 #include <iomanip>
 
-Button::Button() : m_x(0), m_y(0), m_w(0), m_h(0), m_isHover(false) {}
+Button::Button() : m_x(0), m_y(0), m_w(0), m_h(0), m_isHover(false), m_style(BUTTON_STYLE_NORMAL) {}
 
 Button::Button(int x, int y, int w, int h, std::string text)
-    : m_x(x), m_y(y), m_w(w), m_h(h), m_text(text), m_isHover(false) {
+    : m_x(x), m_y(y), m_w(w), m_h(h), m_text(text), m_isHover(false), m_style(BUTTON_STYLE_NORMAL) {
 }
 
 void Button::setRect(int x, int y, int w, int h) {
@@ -20,6 +20,10 @@ void Button::setText(const std::string& text) {
     m_text = text;
 }
 
+void Button::setVisualStyle(ButtonVisualStyle style) {
+    m_style = style;
+}
+
 bool Button::contains(int x, int y) const {
     return x >= m_x && x <= m_x + m_w && y >= m_y && y <= m_y + m_h;
 }
@@ -28,12 +32,33 @@ bool Button::contains(int x, int y) const {
 bool Button::draw(MOUSEMSG msg) {
     m_isHover = contains(msg.x, msg.y);
 
-    setfillcolor(m_isHover ? UIConfig::COL_BTN_HOVER : UIConfig::COL_BTN_NORMAL);
+    bool isLargeStyle = (m_style == BUTTON_STYLE_LARGE);
+    COLORREF fillColor = isLargeStyle
+        ? (m_isHover ? UIConfig::COL_LARGE_BTN_HOVER : UIConfig::COL_LARGE_BTN_NORMAL)
+        : (m_isHover ? UIConfig::COL_BTN_HOVER : UIConfig::COL_BTN_NORMAL);
+    COLORREF borderColor = isLargeStyle ? UIConfig::COL_LARGE_BTN_BORDER : UIConfig::COL_BTN_BORDER;
+    COLORREF textColor = isLargeStyle ? UIConfig::COL_LARGE_BTN_TEXT : UIConfig::COL_TEXT;
+    int borderWidth = isLargeStyle ? UIConfig::LARGE_BTN_BORDER_WIDTH : UIConfig::NORMAL_BTN_BORDER_WIDTH;
+    int textSize = isLargeStyle ? UIConfig::LARGE_BTN_TEXT_SIZE : 24;
+
+    setfillcolor(fillColor);
+    setlinecolor(borderColor);
+    setlinestyle(PS_SOLID, borderWidth);
     fillroundrect(m_x, m_y, m_x + m_w, m_y + m_h, 10, 10);
 
     setbkmode(TRANSPARENT);
-    settextcolor(UIConfig::COL_TEXT);
-    settextstyle(24, 0, _T("微软雅黑"));
+    settextcolor(textColor);
+
+    if (isLargeStyle) {
+        LOGFONT font = { 0 };
+        font.lfHeight = textSize;
+        font.lfWeight = FW_BOLD;
+        _tcscpy_s(font.lfFaceName, _T("微软雅黑"));
+        settextstyle(&font);
+    }
+    else {
+        settextstyle(textSize, 0, _T("微软雅黑"));
+    }
 
     const char* textCStr = m_text.c_str();
 
@@ -41,6 +66,7 @@ bool Button::draw(MOUSEMSG msg) {
     int th = textheight(textCStr);
 
     outtextxy(m_x + (m_w - tw) / 2, m_y + (m_h - th) / 2, textCStr);
+    setlinestyle(PS_SOLID, 1);
 
     if (m_isHover && msg.uMsg == WM_LBUTTONDOWN) {
         playClickSound();
@@ -85,10 +111,10 @@ void showPopupIfNeeded() {
             int w = 240, h = 60;
             int x = (Width - w) / 2;
             int y = 120;
-            setfillcolor(RGB(40,40,40));
-            setlinecolor(RGB(200,200,0));
+            setfillcolor(UIConfig::COL_POPUP_FILL);
+            setlinecolor(UIConfig::COL_POPUP_BORDER);
             fillroundrect(x, y, x + w, y + h, 16, 16);
-            settextcolor(RGB(255,255,0));
+            settextcolor(UIConfig::COL_POPUP_TEXT);
             setbkmode(TRANSPARENT);
             settextstyle(28, 0, _T("微软雅黑"));
             int tw = textwidth(popupText.c_str());
@@ -138,13 +164,13 @@ bool RankPanel::draw(MOUSEMSG msg) {
     bool shouldClose = false;
 
     const int panelPadding = 32;
-    setfillcolor(RGB(28, 28, 28));
-    setlinecolor(RGB(185, 185, 185));
+    setfillcolor(UIConfig::COL_PANEL_FILL);
+    setlinecolor(UIConfig::COL_PANEL_BORDER);
     setlinestyle(PS_SOLID, 1);
     fillroundrect(_x, _y, _x + _w, _y + _h, 14, 14);
 
     setbkmode(TRANSPARENT);
-    settextcolor(WHITE);
+    settextcolor(UIConfig::COL_PANEL_TEXT);
     settextstyle(30, 0, _T("微软雅黑"));
     TCHAR title[] = _T("排行榜");
     int tw = textwidth(title);
@@ -156,11 +182,11 @@ bool RankPanel::draw(MOUSEMSG msg) {
     bool closeHover = msg.x >= closeX && msg.x <= closeX + closeSize &&
         msg.y >= closeY && msg.y <= closeY + closeSize;
 
-    setfillcolor(closeHover ? RGB(70, 38, 38) : RGB(36, 36, 36));
-    setlinecolor(closeHover ? RGB(255, 110, 110) : RGB(210, 80, 80));
+    setfillcolor(closeHover ? UIConfig::COL_CLOSE_HOVER : UIConfig::COL_CLOSE_FILL);
+    setlinecolor(UIConfig::COL_CLOSE_TEXT);
     fillroundrect(closeX, closeY, closeX + closeSize, closeY + closeSize, 8, 8);
 
-    settextcolor(RGB(255, 80, 80));
+    settextcolor(UIConfig::COL_CLOSE_TEXT);
     settextstyle(20, 0, _T("微软雅黑"));
     TCHAR closeText[] = _T("X");
     int closeTextW = textwidth(closeText);
@@ -204,14 +230,14 @@ bool RankPanel::draw(MOUSEMSG msg) {
     int col3 = _x + 275;
     int col4 = _x + 350;
 
-    settextcolor(RGB(160, 160, 160));
+    settextcolor(UIConfig::COL_PANEL_MUTED);
     settextstyle(20, 0, _T("微软雅黑"));
     outtextxy(col1, tableY, _T("排名"));
     outtextxy(col2, tableY, _T("玩家"));
     outtextxy(col3, tableY, _T("用时"));
     outtextxy(col4, tableY, _T("日期"));
 
-    setlinecolor(RGB(90, 90, 90));
+    setlinecolor(UIConfig::COL_PANEL_LINE);
     line(_x + panelPadding, tableY + 28, _x + _w - panelPadding, tableY + 28);
 
     int rowY = tableY + 40;
@@ -222,10 +248,10 @@ bool RankPanel::draw(MOUSEMSG msg) {
     }
 
     for (int i = _scrollOffset; i < endIndex; i++) {
-        if (i == 0) settextcolor(RGB(255, 215, 0));
-        else if (i == 1) settextcolor(RGB(192, 192, 192));
-        else if (i == 2) settextcolor(RGB(205, 127, 50));
-        else settextcolor(RGB(240, 240, 240));
+        if (i == 0) settextcolor(UIConfig::COL_RANK_GOLD);
+        else if (i == 1) settextcolor(UIConfig::COL_RANK_SILVER);
+        else if (i == 2) settextcolor(UIConfig::COL_RANK_BRONZE);
+        else settextcolor(UIConfig::COL_PANEL_TEXT);
 
         settextstyle(20, 0, _T("微软雅黑"));
 
@@ -263,7 +289,7 @@ bool RankPanel::draw(MOUSEMSG msg) {
     }
 
     settextstyle(18, 0, _T("微软雅黑"));
-    settextcolor(RGB(135, 135, 135));
+    settextcolor(UIConfig::COL_PANEL_MUTED);
     TCHAR pageText[64];
     if (scores.empty()) {
         _stprintf_s(pageText, _T("暂无成绩"));
@@ -288,9 +314,9 @@ bool RankPanel::draw(MOUSEMSG msg) {
         }
         int thumbY = barTop + (_scrollOffset * (trackH - thumbH) / maxOffset);
 
-        setlinecolor(RGB(75, 75, 75));
+        setlinecolor(UIConfig::COL_PANEL_LINE);
         line(barX, barTop, barX, barBottom);
-        setfillcolor(RGB(135, 135, 135));
+        setfillcolor(UIConfig::COL_PANEL_MUTED);
         fillroundrect(barX - 3, thumbY, barX + 3, thumbY + thumbH, 4, 4);
     }
 
@@ -335,20 +361,20 @@ bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
     bool confirmed = false;
     setorigin(0, 0);
 
-    setfillcolor(RGB(40, 40, 40));
-    setlinecolor(RGB(255, 255, 255));
+    setfillcolor(UIConfig::COL_PANEL_FILL);
+    setlinecolor(UIConfig::COL_PANEL_BORDER);
     setlinestyle(PS_SOLID, 1);
-    fillrectangle(_x, _y, _x + _w, _y + _h);
+    fillroundrect(_x, _y, _x + _w, _y + _h, 14, 14);
 
     setbkmode(TRANSPARENT);
-    settextcolor(WHITE);
+    settextcolor(UIConfig::COL_PANEL_TEXT);
     settextstyle(28, 0, _T("微软雅黑"));
     TCHAR title[] = _T("用户登录");
     int tw = textwidth(title);
     outtextxy(_x + (_w - tw) / 2, _y + 30, title);
 
     settextstyle(18, 0, _T("微软雅黑"));
-    settextcolor(RGB(200, 200, 200));
+    settextcolor(UIConfig::COL_PANEL_TEXT);
     outtextxy(_x + 40, _y + 90, _T("用户名："));
 
     int inputX = _x + 40;
@@ -356,12 +382,12 @@ bool LoginPanel::draw(MOUSEMSG msg, string& outUsername) {
     int inputW = _w - 80;
     int inputH = 40;
 
-    if (_isInputActive) setlinecolor(RGB(100, 200, 255));
-    else setlinecolor(RGB(100, 100, 100));
-    setfillcolor(RGB(60, 60, 60));
-    fillrectangle(inputX, inputY, inputX + inputW, inputY + inputH);
+    if (_isInputActive) setlinecolor(UIConfig::COL_INPUT_ACTIVE);
+    else setlinecolor(UIConfig::COL_INPUT_BORDER);
+    setfillcolor(UIConfig::COL_INPUT_FILL);
+    fillroundrect(inputX, inputY, inputX + inputW, inputY + inputH, 8, 8);
 
-    settextcolor(WHITE);
+    settextcolor(UIConfig::COL_PANEL_TEXT);
     settextstyle(20, 0, _T("微软雅黑"));
     if (!_inputText.empty()) {
         outtextxy(inputX + 10, inputY + 8, _inputText.c_str());
@@ -466,8 +492,8 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
 
     setorigin(0, 0);
 
-    setfillcolor(RGB(40, 40, 40));
-    setlinecolor(RGB(120, 120, 120));
+    setfillcolor(UIConfig::COL_PANEL_FILL);
+    setlinecolor(UIConfig::COL_PANEL_BORDER);
     fillroundrect(_x, _y, _x + _w, _y + _h, 12, 12);
 
     int itemY = _y + 25;
@@ -502,7 +528,7 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
     for (int i = 0; i < 3; i++) {
         Toggle& t = _toggles[i];
 
-        settextcolor(RGB(220, 220, 220));
+        settextcolor(UIConfig::COL_PANEL_TEXT);
         outtextxy(t.x, t.y, t.label);
 
         int swX = t.x + 120;
@@ -512,16 +538,16 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
             msg.y >= swY && msg.y <= swY + t.h);
 
         if (*(t.state)) {
-            setfillcolor(isHover ? RGB(110, 110, 110) : RGB(90, 90, 90));
+            setfillcolor(isHover ? UIConfig::COL_BTN_HOVER : UIConfig::COL_BTN_NORMAL);
         }
         else {
-            setfillcolor(isHover ? RGB(80, 80, 80) : RGB(60, 60, 60));
+            setfillcolor(isHover ? UIConfig::COL_PANEL_INNER : UIConfig::COL_TOGGLE_OFF);
         }
 
-        setlinecolor(RGB(120, 120, 120));
+        setlinecolor(UIConfig::COL_PANEL_BORDER);
         fillroundrect(swX, swY, swX + t.w, swY + t.h, 6, 6);
 
-        settextcolor(RGB(255, 255, 255));
+        settextcolor(UIConfig::COL_PANEL_TEXT);
         settextstyle(24, 0, _T("微软雅黑"));
         outtextxy(swX + 14, swY + 0, *(t.state) ? _T("开") : _T("关"));
 
@@ -573,8 +599,8 @@ void FormulaPanel::draw(MOUSEMSG msg) {
     m_lastClicked = "";
     if (!m_visible) return;
 
-    setfillcolor(RGB(40, 40, 40));
-    setlinecolor(RGB(120, 120, 120));
+    setfillcolor(UIConfig::COL_PANEL_FILL);
+    setlinecolor(UIConfig::COL_PANEL_BORDER);
     int panelW = 4 * 60 + 3 * 10 + 20;
     int panelH = 3 * 40 + 2 * 10 + 20;
     int extraH = 50;
@@ -584,10 +610,10 @@ void FormulaPanel::draw(MOUSEMSG msg) {
         int bx = m_x + key.x + 10;
         int by = m_y + key.y + 10;
         key.isHover = (msg.x >= bx && msg.x <= bx + key.w && msg.y >= by && msg.y <= by + key.h);
-        setfillcolor(key.isHover ? RGB(100, 100, 60) : RGB(60, 60, 60));
-        setlinecolor(RGB(120, 120, 120));
+        setfillcolor(key.isHover ? UIConfig::COL_BTN_HOVER : UIConfig::COL_BTN_NORMAL);
+        setlinecolor(UIConfig::COL_PANEL_BORDER);
         fillroundrect(bx, by, bx + key.w, by + key.h, 8, 8);
-        settextcolor(RGB(255, 255, 0));
+        settextcolor(UIConfig::COL_TEXT);
         setbkmode(TRANSPARENT);
         settextstyle(24, 0, _T("微软雅黑"));
         int tw = textwidth(key.label.c_str());
@@ -602,7 +628,8 @@ void FormulaPanel::draw(MOUSEMSG msg) {
     int sy = m_y + panelH + 10;
     int sw = panelW - 20;
     int sh = 30;
-    setfillcolor(RGB(50, 50, 50));
+    setfillcolor(UIConfig::COL_PANEL_INNER);
+    setlinecolor(UIConfig::COL_PANEL_BORDER);
     fillroundrect(sx, sy, sx + sw, sy + sh, 6, 6);
 
     int btnW = 100;
@@ -610,14 +637,19 @@ void FormulaPanel::draw(MOUSEMSG msg) {
     int bx = sx + sw - btnW - 10;
     int by = sy + (sh - btnH) / 2;
     bool btnHover = (msg.x >= bx && msg.x <= bx + btnW && msg.y >= by && msg.y <= by + btnH);
-    setfillcolor(btnHover ? RGB(120, 120, 120) : RGB(90, 90, 90));
+    setfillcolor(btnHover ? UIConfig::COL_BTN_HOVER : UIConfig::COL_BTN_NORMAL);
+    setlinecolor(UIConfig::COL_PANEL_BORDER);
     fillroundrect(bx, by, bx + btnW, by + btnH, 6, 6);
-    settextcolor(RGB(220, 220, 220));
+    settextcolor(UIConfig::COL_PANEL_TEXT);
     settextstyle(20, 0, _T("微软雅黑"));
-    std::string label = m_axesOn ? "坐标轴:                 开" : "坐标轴:                 关";
-    int tw = textwidth(label.c_str());
-    int th = textheight(label.c_str());
-    outtextxy(sx + 8, sy + (sh - th) / 2, label.c_str());
+    const char* axisLabel = "坐标轴:";
+    int labelH = textheight(axisLabel);
+    outtextxy(sx + 8, sy + (sh - labelH) / 2, axisLabel);
+
+    const char* btnText = m_axesOn ? "开" : "关";
+    int btnTextW = textwidth(btnText);
+    int btnTextH = textheight(btnText);
+    outtextxy(bx + (btnW - btnTextW) / 2, by + (btnH - btnTextH) / 2, btnText);
     if (msg.uMsg == WM_LBUTTONDOWN && btnHover) {
         playClickSound();
         m_axesOn = !m_axesOn;
@@ -654,8 +686,8 @@ void TeachColorPanel::draw(MOUSEMSG msg) {
     int panelW = 3 * w + 2 * gap + 20;
     int panelH = 2 * h + gap + 20;
 
-    setfillcolor(RGB(40, 40, 40));
-    setlinecolor(RGB(120, 120, 120));
+    setfillcolor(UIConfig::COL_PANEL_FILL);
+    setlinecolor(UIConfig::COL_PANEL_BORDER);
     fillroundrect(m_x, m_y, m_x + panelW, m_y + panelH, 8, 8);
 
     for (auto& k : m_keys) {
@@ -663,7 +695,8 @@ void TeachColorPanel::draw(MOUSEMSG msg) {
         int by = m_y + k.y + 10;
 
         k.hover = (msg.x >= bx && msg.x <= bx + k.w && msg.y >= by && msg.y <= by + k.h);
-        setfillcolor(k.hover ? RGB(120, 120, 120) : RGB(80, 80, 80));
+        setfillcolor(k.hover ? UIConfig::COL_BTN_HOVER : UIConfig::COL_BTN_NORMAL);
+        setlinecolor(UIConfig::COL_PANEL_BORDER);
         fillroundrect(bx, by, bx + k.w, by + k.h, 6, 6);
 
         setfillcolor(k.col);

@@ -560,6 +560,9 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
             else if (i == 1) {
                 setSoundEnabled(_soundOn);
             }
+            if (_soundOn) {
+                playClickSound();
+            }
         }
     }
 

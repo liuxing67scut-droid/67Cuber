@@ -42,6 +42,10 @@ string getCurrentTimeStr() {
 }
 
 void saveScore(string name, double time_sec) {
+    if (time_sec < 0.01) {
+        return;
+    }
+
     const string fileName = getRecordFilePath();
     ofstream outFile(fileName, ios::out | ios::app);
 

@@ -130,9 +130,10 @@ void updateAndDrawGameScene(MainViewState& viewState, bool userInteracted) {
 	SettingsPanel& settingsPanel = g_ui.settingsPanel;
 
 	bool isPickingColor = (currentMode == PLAY_MODE_TEACH && teachPanel.isVisible());
+	bool isPracticeRightDragging = (currentMode == PLAY_MODE_PRACTICE && viewState.practiceRightDragActive);
 	bool autoRotateEnabled = settingsPanel.isAutoRotateOn();
 
-	if (userInteracted || !pRubikcube->isExecuteOver() || isPickingColor || !autoRotateEnabled) {
+	if (userInteracted || isPracticeRightDragging || !pRubikcube->isExecuteOver() || isPickingColor || !autoRotateEnabled) {
 		isAutoRotating = false;
 		autoRotateSpeed = 0.0;
 		idleTimer.reset();
@@ -168,8 +169,10 @@ void updateAndDrawGameScene(MainViewState& viewState, bool userInteracted) {
 //场景绘制后处理模式面板、完成判定和浮层
 void handleGameRuntimeUi(MainViewState& viewState) {
 	handleTeachModePickInput(viewState);
+	handlePracticeRightDragRotation(viewState);
 	handlePracticeModeCompletion(viewState);
 	handleAlgorithmSolveCompletion();
+	drawPracticeRightDragPreview(viewState);
 	drawGameHud();
 	handlePracticeFormulaExecution(viewState);
 	handleTeachPanelInteraction(viewState);

@@ -21,8 +21,7 @@ bool drawSelectBackgroundImage() {
 
 	if (!triedLoad) {
 		triedLoad = true;
-		//暂时都用menu_bg.png
-		loaded = loadScaledImage(bgImage, getImagePath("menu_bg.png"), Width, Height);
+		loaded = loadScaledImage(bgImage, getImagePath("select_bg.png"), Width, Height);
 		if (!loaded) {
 			loaded = loadScaledImage(bgImage, getImagePath("menu_bg.png"), Width, Height);
 		}

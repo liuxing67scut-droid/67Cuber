@@ -3,6 +3,18 @@
 #include "cube.h"
 #include "common.h"
 
+struct StickerDragGeometry {
+	POINT screenPolygon[4] = {};
+	Point cubieCenter = { 0, 0, 0 };
+	Point stickerCenter = { 0, 0, 0 };
+	Point normal = { 0, 0, 0 };
+	Point rowAxis = { 0, 0, 0 };
+	Point colAxis = { 0, 0, 0 };
+	int currentFace = -1;
+	int currentRow = -1;
+	int currentCol = -1;
+};
+
 //三阶魔方的可视模型，负责绘制、动画和贴纸映射
 class RubikCube {
 public:
@@ -35,9 +47,11 @@ public:
 	//练习模式辅助方向标识
 	void drawTestAxes();
 
-	//教学模式右键选择贴纸
+	//屏幕拾取和贴纸投影
 	bool pickStickerAtScreen(int mx, int my, int &out_k, int &out_i, int &out_j, int &out_planeIndex);
 	void clearAllHighlights();
+	bool getStickerScreenPolygon(int k, int i, int j, int planeIndex, POINT out[4]) const;
+	bool getStickerDragGeometry(int k, int i, int j, int planeIndex, StickerDragGeometry& out) const;
 
 	//只改显示颜色，不改逻辑 Cube
 	void setStickerColorVisual(int k, int i, int j, int planeIndex, COLORREF col);

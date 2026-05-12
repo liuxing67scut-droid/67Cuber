@@ -1,4 +1,5 @@
 ﻿#include "ui.h"
+#include "cube_colors.h"
 #include "music.h"
 #include <ctime>
 
@@ -661,12 +662,12 @@ TeachColorPanel::TeachColorPanel() : m_x(0), m_y(0), m_visible(false), m_lastCli
     int h = 40;
     int gap = 10;
 
-    m_keys.push_back({ 'G', RGB(0, 255, 0), 0 * (w + gap), 0 * (h + gap), w, h, false });
-    m_keys.push_back({ 'O', RGB(255, 128, 50), 1 * (w + gap), 0 * (h + gap), w, h, false });
-    m_keys.push_back({ 'Y', RGB(255, 255, 0), 2 * (w + gap), 0 * (h + gap), w, h, false });
-    m_keys.push_back({ 'W', RGB(235, 235, 235), 0 * (w + gap), 1 * (h + gap), w, h, false });
-    m_keys.push_back({ 'R', RGB(235, 0, 0), 1 * (w + gap), 1 * (h + gap), w, h, false });
-    m_keys.push_back({ 'B', RGB(62, 157, 251), 2 * (w + gap), 1 * (h + gap), w, h, false });
+    m_keys.push_back({ 'G', cubeColorToRgb('G'), 0 * (w + gap), 0 * (h + gap), w, h, false });
+    m_keys.push_back({ 'O', cubeColorToRgb('O'), 1 * (w + gap), 0 * (h + gap), w, h, false });
+    m_keys.push_back({ 'Y', cubeColorToRgb('Y'), 2 * (w + gap), 0 * (h + gap), w, h, false });
+    m_keys.push_back({ 'W', cubeColorToRgb('W'), 0 * (w + gap), 1 * (h + gap), w, h, false });
+    m_keys.push_back({ 'R', cubeColorToRgb('R'), 1 * (w + gap), 1 * (h + gap), w, h, false });
+    m_keys.push_back({ 'B', cubeColorToRgb('B'), 2 * (w + gap), 1 * (h + gap), w, h, false });
 }
 
 void TeachColorPanel::setPosition(int x, int y) { m_x = x; m_y = y; }

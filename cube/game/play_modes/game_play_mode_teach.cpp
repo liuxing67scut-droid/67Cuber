@@ -1,5 +1,7 @@
 ﻿#include "game_internal.h"
 
+#include "cube_colors.h"
+
 #include <iostream>
 
 //绘制教学模式按钮
@@ -161,18 +163,7 @@ void handleTeachPanelInteraction(MainViewState& viewState) {
 				clearTeachSelection(viewState);
 			}
 			else if (sel_k != -1 && pRubikcube && pRubikcube->isExecuteOver()) {
-				auto colorCharToRGB = [](char c) -> COLORREF {
-					switch (c) {
-					case 'G': return RGB(0, 255, 0);
-					case 'O': return RGB(255, 128, 50);
-					case 'Y': return RGB(255, 255, 0);
-					case 'W': return RGB(235, 235, 235);
-					case 'R': return RGB(235, 0, 0);
-					case 'B': return RGB(62, 157, 251);
-					default: return RGB(70, 70, 70);
-					}
-				};
-				COLORREF col = colorCharToRGB(chosen);
+				COLORREF col = cubeColorToRgb(chosen);
 
 				pRubikcube->setStickerColorVisual(sel_k, sel_i, sel_j, sel_p, col);
 

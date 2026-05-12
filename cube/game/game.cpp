@@ -15,7 +15,7 @@ void initGameApp(const char* exePath) {
 	initRecordFile();
 	setbkcolor(UIConfig::COL_BG);
 	BeginBatchDraw();
-	initWinPos_Title(getPathName(exePath), "67 Cuber");
+	initWinPos_Title(getPathName(exePath), "67Cuber");
 	initButtons();
 }
 
@@ -46,7 +46,7 @@ void runGameApp() {
 	}
 
 	FlushBatchDraw();
-	Sleep(1);
+	Sleep(0);
 	if (msg.uMsg == WM_LBUTTONDOWN) {
 		msg.uMsg = 0;
 	}

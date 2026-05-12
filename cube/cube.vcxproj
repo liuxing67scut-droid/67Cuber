@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="services\app_paths.cpp" />
     <ClCompile Include="core\cube.cpp" />
+    <ClCompile Include="core\cube_colors.cpp" />
     <ClCompile Include="core\cubesolver.cpp" />
     <ClCompile Include="game\game.cpp" />
     <ClCompile Include="game\game_menu_page.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="services\app_paths.h" />
     <ClInclude Include="core\common.h" />
     <ClInclude Include="core\cube.h" />
+    <ClInclude Include="core\cube_colors.h" />
     <ClInclude Include="core\cubesolver.h" />
     <ClInclude Include="game\game.h" />
     <ClInclude Include="game\game_internal.h" />

@@ -1,5 +1,59 @@
 ﻿#include "rubikcube.h"
 #include "cubesolver.h"
+#include "cube_colors.h"
+
+namespace {
+double pointLength(const Point& p) {
+	return sqrt(p.x * p.x + p.y * p.y + p.z * p.z);
+}
+
+Point normalizePoint(const Point& p) {
+	double len = pointLength(p);
+	if (len < 1e-6) {
+		return { 0, 0, 0 };
+	}
+
+	return p / len;
+}
+
+double dotPoint(const Point& a, const Point& b) {
+	return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+int classifyLayerByProjection(double projection) {
+	const double threshold = 50.0;
+	if (projection < -threshold) {
+		return 0;
+	}
+	if (projection > threshold) {
+		return 2;
+	}
+	return 1;
+}
+
+int rowPositiveFaceOf(int face) {
+	if (face == U) {
+		return F;
+	}
+	if (face == D) {
+		return B;
+	}
+	return D;
+}
+
+int colPositiveFaceOf(int face) {
+	if (face == B) {
+		return L;
+	}
+	if (face == R) {
+		return B;
+	}
+	if (face == L) {
+		return F;
+	}
+	return R;
+}
+}
 
 RubikCube::RubikCube() {
 	//初始化小方块位置
@@ -11,30 +65,30 @@ RubikCube::RubikCube() {
 				cube[k][i][j].setOffset(offset[k][i][j]);
 			}
 
-	//面颜色约定：F绿 R红 B蓝 L橙 U黄 D白
+	//面颜色约定：F蓝 R红 B绿 L橙 U黄 D白
 	for (int i = 0; i < D; i++)
 		for (int j = 0; j < D; j++)
-			cube[0][i][j].plane[0].setColor(RGB(0, 255, 0));
+			cube[0][i][j].plane[0].setColor(cubeFaceColorToRgb(F));
 
 	for (int i = 0; i < D; i++)
 		for (int k = 0; k < D; k++)
-			cube[k][i][2].plane[1].setColor(RGB(235, 0, 0));
+			cube[k][i][2].plane[1].setColor(cubeFaceColorToRgb(R));
 
 	for (int i = 0; i < D; i++)
 		for (int j = 0; j < D; j++)
-			cube[2][i][j].plane[4].setColor(RGB(62, 157, 251));
+			cube[2][i][j].plane[4].setColor(cubeFaceColorToRgb(B));
 
 	for (int i = 0; i < D; i++)
 		for (int k = 0; k < D; k++)
-			cube[k][i][0].plane[5].setColor(RGB(255, 128, 50));
+			cube[k][i][0].plane[5].setColor(cubeFaceColorToRgb(L));
 
 	for (int j = 0; j < D; j++)
 		for (int k = 0; k < D; k++)
-			cube[k][0][j].plane[3].setColor(RGB(255, 255, 0));
+			cube[k][0][j].plane[3].setColor(cubeFaceColorToRgb(U));
 
 	for (int j = 0; j < D; j++)
 		for (int k = 0; k < D; k++)
-			cube[k][2][j].plane[2].setColor(RGB(235, 235, 235));
+			cube[k][2][j].plane[2].setColor(cubeFaceColorToRgb(D));
 
 	//当前可视方向到中心块偏移的映射
 	Map = {
@@ -183,12 +237,12 @@ void RubikCube::setCentersColoredOnly() {
 			}
 
 	//恢复六个中心块的标准色
-	cube[0][1][1].plane[0].setColor(RGB(0, 255, 0));
-	cube[1][1][2].plane[1].setColor(RGB(235, 0, 0));
-	cube[2][1][1].plane[4].setColor(RGB(62, 157, 251));
-	cube[1][1][0].plane[5].setColor(RGB(255, 128, 50));
-	cube[1][0][1].plane[3].setColor(RGB(255, 255, 0));
-	cube[1][2][1].plane[2].setColor(RGB(235, 235, 235));
+	cube[0][1][1].plane[0].setColor(cubeFaceColorToRgb(F));
+	cube[1][1][2].plane[1].setColor(cubeFaceColorToRgb(R));
+	cube[2][1][1].plane[4].setColor(cubeFaceColorToRgb(B));
+	cube[1][1][0].plane[5].setColor(cubeFaceColorToRgb(L));
+	cube[1][0][1].plane[3].setColor(cubeFaceColorToRgb(U));
+	cube[1][2][1].plane[2].setColor(cubeFaceColorToRgb(D));
 }
 
 
@@ -286,19 +340,6 @@ void RubikCube::drawTestAxes() {
 		{'U', 2}, {'D', 3}, {'F', 0}, {'B', 5}, {'R', 4}, {'L', 1}
 	};
 
-	//标识颜色沿用魔方标准色
-	auto colorOf = [](char c) -> COLORREF {
-		switch (c) {
-		case 'U': return RGB(255, 255, 0);
-		case 'D': return RGB(235, 235, 235);
-		case 'F': return RGB(0, 255, 0);
-		case 'B': return RGB(62, 157, 251);
-		case 'R': return RGB(235, 0, 0);
-		case 'L': return RGB(255, 128, 50);
-		default:  return RGB(255, 255, 255);
-		}
-	};
-
 	Point zero = { 0,0,0 };
 	Point centerCube = offset[1][1][1];
 
@@ -326,7 +367,7 @@ void RubikCube::drawTestAxes() {
 		POINT ps = start.trans(&zero);
 		POINT pt = tip.trans(&zero);
 
-		COLORREF baseCol = colorOf(ch);
+		COLORREF baseCol = cubeFaceColorToRgb(csIdx);
 		//提亮颜色，避免与面色混在一起
 		COLORREF blended = RGB((GetRValue(baseCol) + 190) / 2, (GetGValue(baseCol) + 190) / 2, (GetBValue(baseCol) + 190) / 2);
 		setlinecolor(blended);
@@ -404,6 +445,80 @@ void RubikCube::clearAllHighlights() {
 			}
 }
 
+bool RubikCube::getStickerScreenPolygon(int k, int i, int j, int planeIndex, POINT out[4]) const {
+	if (k < 0 || k >= D || i < 0 || i >= D || j < 0 || j >= D || planeIndex < 0 || planeIndex >= 6 || out == nullptr) {
+		return false;
+	}
+
+	cube[k][i][j].plane[planeIndex].getScreenPolygon(out, &offset[k][i][j]);
+	return true;
+}
+
+bool RubikCube::getStickerDragGeometry(int k, int i, int j, int planeIndex, StickerDragGeometry& out) const {
+	if (k < 0 || k >= D || i < 0 || i >= D || j < 0 || j >= D || planeIndex < 0 || planeIndex >= 6) {
+		return false;
+	}
+
+	const Point centerCube = offset[1][1][1];
+	auto directionOfFace = [&](int face) -> Point {
+		int mapIndex = -1;
+		if (face == F) {
+			mapIndex = 1;
+		}
+		else if (face == L) {
+			mapIndex = 0;
+		}
+		else if (face == U) {
+			mapIndex = 4;
+		}
+		else if (face == D) {
+			mapIndex = 5;
+		}
+		else if (face == R) {
+			mapIndex = 2;
+		}
+		else if (face == B) {
+			mapIndex = 3;
+		}
+
+		if (mapIndex < 0) {
+			return { 0, 0, 0 };
+		}
+		return normalizePoint(*Map[mapIndex] - centerCube);
+	};
+
+	cube[k][i][j].plane[planeIndex].getScreenPolygon(out.screenPolygon, &offset[k][i][j]);
+	out.cubieCenter = offset[k][i][j];
+	out.stickerCenter = cube[k][i][j].plane[planeIndex].Center();
+	out.normal = normalizePoint(out.stickerCenter - out.cubieCenter);
+
+	const int faces[6] = { F, L, U, D, R, B };
+	double bestScore = -1e9;
+	int bestFace = -1;
+	for (int n = 0; n < 6; ++n) {
+		Point faceDir = directionOfFace(faces[n]);
+		double score = dotPoint(out.normal, faceDir);
+		if (score > bestScore) {
+			bestScore = score;
+			bestFace = faces[n];
+		}
+	}
+
+	if (bestFace == -1) {
+		return false;
+	}
+
+	out.currentFace = bestFace;
+	out.rowAxis = directionOfFace(rowPositiveFaceOf(bestFace));
+	out.colAxis = directionOfFace(colPositiveFaceOf(bestFace));
+
+	Point rel = out.cubieCenter - centerCube;
+	out.currentRow = classifyLayerByProjection(dotPoint(rel, out.rowAxis));
+	out.currentCol = classifyLayerByProjection(dotPoint(rel, out.colAxis));
+
+	return true;
+}
+
 //只改变可视贴纸颜色
 void RubikCube::setStickerColorVisual(int k, int i, int j, int planeIndex, COLORREF col) {
 	if (k < 0 || k >= D || i < 0 || i >= D || j < 0 || j >= D || planeIndex < 0 || planeIndex >= 6) return;
@@ -457,48 +572,35 @@ bool RubikCube::mapStickerToFace(int k, int i, int j, int planeIndex, int& outFa
 
 //按逻辑 Cube 重绘可视贴纸颜色
 void RubikCube::recolorFromLogicalCube(char srcCube[6][3][3]) {
-	//逻辑颜色字符转为绘制颜色
-	auto charToColor = [](char c) -> COLORREF {
-		switch (c) {
-		case 'G': return RGB(0, 255, 0);
-		case 'R': return RGB(235, 0, 0);
-		case 'B': return RGB(62, 157, 251);
-		case 'O': return RGB(255, 128, 50);
-		case 'Y': return RGB(255, 255, 0);
-		case 'W': return RGB(235, 235, 235);
-		default:  return RGB(70, 70, 70);
-		}
-	};
-
 	//前面：cube[0][i][j].plane[0]
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++)
-			cube[0][i][j].plane[0].setColor(charToColor(srcCube[F][i][j]));
+			cube[0][i][j].plane[0].setColor(cubeColorToRgb(srcCube[F][i][j]));
 
 	//右面：cube[k][i][2].plane[1]
 	for (int i = 0; i < 3; i++)
 		for (int k = 0; k < 3; k++)
-			cube[k][i][2].plane[1].setColor(charToColor(srcCube[R][i][k]));
+			cube[k][i][2].plane[1].setColor(cubeColorToRgb(srcCube[R][i][k]));
 
 	//后面：cube[2][i][j].plane[4]
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++)
-			cube[2][i][j].plane[4].setColor(charToColor(srcCube[B][i][j]));
+			cube[2][i][j].plane[4].setColor(cubeColorToRgb(srcCube[B][i][j]));
 
 	//左面：cube[k][i][0].plane[5]
 	for (int i = 0; i < 3; i++)
 		for (int k = 0; k < 3; k++)
-			cube[k][i][0].plane[5].setColor(charToColor(srcCube[L][i][k]));
+			cube[k][i][0].plane[5].setColor(cubeColorToRgb(srcCube[L][i][k]));
 
 	//顶面显示需要转置逻辑行列
 	for (int j = 0; j < 3; j++)
 		for (int k = 0; k < 3; k++)
-			cube[k][0][j].plane[3].setColor(charToColor(srcCube[U][j][k]));
+			cube[k][0][j].plane[3].setColor(cubeColorToRgb(srcCube[U][j][k]));
 
 	//底面显示需要转置逻辑行列
 	for (int j = 0; j < 3; j++)
 		for (int k = 0; k < 3; k++)
-			cube[k][2][j].plane[2].setColor(charToColor(srcCube[D][j][k]));
+			cube[k][2][j].plane[2].setColor(cubeColorToRgb(srcCube[D][j][k]));
 }
 
 void RubikCube::resetMap() {

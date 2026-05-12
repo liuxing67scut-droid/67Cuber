@@ -3,9 +3,9 @@
 #include <sstream>
 
 //面编号和颜色约定，需和可视魔方颜色保持一致
-//F绿 L橙 U黄 D白 R红 B蓝
+//F蓝 L橙 U黄 D白 R红 B绿
 const int F = 0, L = 1, U = 2, D = 3, R = 4, B = 5;
-const char Color[6] = { 'G','O','Y','W','R','B' };
+const char Color[6] = { 'B','O','Y','W','R','G' };
 string Command;
 int step = 0;
 bool isSrand = 0;

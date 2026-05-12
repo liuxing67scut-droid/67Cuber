@@ -106,6 +106,20 @@ struct MainViewState {
 	bool btnTestSolveClicked = false;
 	bool teachModeHasRunOnce = false;
 
+	//练习模式右键拖拽预览
+	bool practiceRightDragActive = false;
+	bool practiceRightDragPreviewVisible = false;
+	int practiceDragStartX = 0;
+	int practiceDragStartY = 0;
+	int practiceDragCurrentX = 0;
+	int practiceDragCurrentY = 0;
+	int practiceCurrentFace = -1;
+	int practiceCurrentRow = -1;
+	int practiceCurrentCol = -1;
+	POINT practiceCurrentRowAxis = { 0, 0 };
+	POINT practiceCurrentColAxis = { 0, 0 };
+	POINT practiceDragPolygon[4] = {};
+
 	MainViewState() {
 		formulaPanel.setPosition(60, 470);
 	}

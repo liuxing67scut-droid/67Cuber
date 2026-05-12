@@ -54,6 +54,9 @@
     <ClCompile Include="core\cube.cpp">
       <Filter>源文件\Core</Filter>
     </ClCompile>
+    <ClCompile Include="core\cube_colors.cpp">
+      <Filter>源文件\Core</Filter>
+    </ClCompile>
     <ClCompile Include="core\cubesolver.cpp">
       <Filter>源文件\Core</Filter>
     </ClCompile>
@@ -141,6 +144,9 @@
       <Filter>头文件\Core</Filter>
     </ClInclude>
     <ClInclude Include="core\cube.h">
+      <Filter>头文件\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\cube_colors.h">
       <Filter>头文件\Core</Filter>
     </ClInclude>
     <ClInclude Include="core\cubesolver.h">

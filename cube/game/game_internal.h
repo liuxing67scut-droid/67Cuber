@@ -41,6 +41,8 @@ void handleAutoModeActions(MainViewState& viewState, const GameControlState& con
 //练习模式
 void drawPracticeModeControls(MainViewState& viewState, GameControlState& controlState);
 void handlePracticeModeActions(MainViewState& viewState, const GameControlState& controlState);
+void handlePracticeRightDragRotation(MainViewState& viewState);
+void drawPracticeRightDragPreview(MainViewState& viewState);
 void handlePracticeModeCompletion(MainViewState& viewState);
 void handlePracticeFormulaExecution(MainViewState& viewState);
 

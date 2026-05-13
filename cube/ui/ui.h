@@ -194,6 +194,22 @@ private:
     Toggle _toggles[3];
 };
 
+//模式玩法提示框
+class ModeHelpPanel {
+public:
+    ModeHelpPanel();
+
+    void showForMode(int mode);
+    void hide();
+    bool isVisible() const;
+    bool draw(MOUSEMSG msg);
+
+private:
+    bool m_visible;
+    int m_mode;
+    bool m_suppressed[3];
+};
+
 //公式面板
 struct FormulaKey {
     std::string label;

@@ -576,6 +576,147 @@ bool SettingsPanel::draw(MOUSEMSG msg) {
     return false;
 }
 
+ModeHelpPanel::ModeHelpPanel() : m_visible(false), m_mode(0), m_suppressed{ false, false, false } {
+}
+
+void ModeHelpPanel::showForMode(int mode) {
+    if (mode < 0 || mode >= 3) {
+        return;
+    }
+
+    m_mode = mode;
+    m_visible = !m_suppressed[mode];
+}
+
+void ModeHelpPanel::hide() {
+    m_visible = false;
+}
+
+bool ModeHelpPanel::isVisible() const {
+    return m_visible;
+}
+
+//绘制当前模式的玩法说明
+bool ModeHelpPanel::draw(MOUSEMSG msg) {
+    if (!m_visible) return false;
+
+    const char* title = "自动模式";
+    std::vector<std::string> lines = {
+        "点击“随机打乱”生成打乱状态。",
+        "点击“算法还原”将使用层先法自动复原，并开始计时。",
+        "点击“一键复位”可回到初始状态。",
+        "自动还原成绩以 PC 身份保存，可在排行榜查看。"
+    };
+
+    if (m_mode == 1) {
+        title = "练习模式";
+        lines = {
+            "点击“随机打乱”后开始练习。",
+            "可打开“公式面板”，按国际配色公式复原。",
+            "也可鼠标右键点击方块，拖拽旋转外层。",
+            "开始复原后将自动开始计时。",
+            "P.S.游客进入不计成绩，登陆后可保存成绩。"
+        };
+    }
+    else if (m_mode == 2) {
+        title = "教学模式";
+        lines = {
+            "准备一个真实魔方，打乱后把颜色填入教学魔方。",
+            "鼠标右键选择贴纸高亮，再左键选择颜色。",
+            "填色必须符合真实魔方规则，否则无法还原。",
+            "点击“人机对战”开始复原，比一比谁更快？",
+            "“一键复位”可重新填写。"
+        };
+    }
+
+    COLORREF saveFill = getfillcolor();
+    COLORREF saveText = gettextcolor();
+    COLORREF saveLine = getlinecolor();
+    int saveBk = getbkmode();
+    LOGFONT saveFont;
+    gettextstyle(&saveFont);
+
+    setorigin(0, 0);
+
+    int panelW = 460;
+    int panelH = 260;
+    int x = Width - 500;
+    int y = Height - 350;
+
+    setfillcolor(RGB(47, 29, 18));
+    setlinecolor(RGB(47, 29, 18));
+    fillroundrect(x + 5, y + 5, x + panelW + 5, y + panelH + 5, 14, 14);
+
+    setfillcolor(UIConfig::COL_PANEL_FILL);
+    setlinecolor(UIConfig::COL_PANEL_BORDER);
+    setlinestyle(PS_SOLID, 3);
+    fillroundrect(x, y, x + panelW, y + panelH, 14, 14);
+
+    setfillcolor(UIConfig::COL_PANEL_INNER);
+    setlinecolor(UIConfig::COL_PANEL_LINE);
+    setlinestyle(PS_SOLID, 1);
+    fillroundrect(x + 16, y + 48, x + panelW - 16, y + panelH - 62, 8, 8);
+
+    setbkmode(TRANSPARENT);
+    settextcolor(UIConfig::COL_PANEL_TEXT);
+    settextstyle(26, 0, _T("微软雅黑"));
+    int titleW = textwidth(title);
+    outtextxy(x + (panelW - titleW) / 2, y + 14, title);
+
+    settextstyle(18, 0, _T("微软雅黑"));
+    int textX = x + 28;
+    int textY = y + 60;
+    for (size_t i = 0; i < lines.size(); ++i) {
+        outtextxy(textX, textY + (int)i * 24, lines[i].c_str());
+    }
+
+    int btnY = y + panelH - 45;
+    int okW = 92;
+    int noTipW = 150;
+    int btnH = 30;
+    int gap = 14;
+    int okX = x + panelW - 24 - okW - gap - noTipW;
+    int noTipX = x + panelW - 24 - noTipW;
+
+    bool okHover = (msg.x >= okX && msg.x <= okX + okW && msg.y >= btnY && msg.y <= btnY + btnH);
+    bool noTipHover = (msg.x >= noTipX && msg.x <= noTipX + noTipW && msg.y >= btnY && msg.y <= btnY + btnH);
+
+    auto drawHelpButton = [](int bx, int by, int bw, int bh, const char* text, bool hover) {
+        setfillcolor(hover ? UIConfig::COL_BTN_HOVER : UIConfig::COL_BTN_NORMAL);
+        setlinecolor(UIConfig::COL_PANEL_BORDER);
+        setlinestyle(PS_SOLID, UIConfig::NORMAL_BTN_BORDER_WIDTH);
+        fillroundrect(bx, by, bx + bw, by + bh, 8, 8);
+        settextcolor(UIConfig::COL_TEXT);
+        setbkmode(TRANSPARENT);
+        settextstyle(18, 0, _T("微软雅黑"));
+        int tw = textwidth(text);
+        int th = textheight(text);
+        outtextxy(bx + (bw - tw) / 2, by + (bh - th) / 2, text);
+    };
+
+    drawHelpButton(okX, btnY, okW, btnH, "知道了", okHover);
+    drawHelpButton(noTipX, btnY, noTipW, btnH, "本次不再提示", noTipHover);
+
+    bool handled = false;
+    if (msg.uMsg == WM_LBUTTONDOWN && (okHover || noTipHover)) {
+        if (noTipHover && m_mode >= 0 && m_mode < 3) {
+            m_suppressed[m_mode] = true;
+        }
+        hide();
+        playClickSound();
+        handled = true;
+    }
+
+    setfillcolor(saveFill);
+    settextcolor(saveText);
+    setlinecolor(saveLine);
+    setbkmode(saveBk);
+    settextstyle(&saveFont);
+    setlinestyle(PS_SOLID, 1);
+
+    return handled;
+}
+
 FormulaPanel::FormulaPanel() : m_x(0), m_y(0), m_visible(false), m_lastClicked(""), m_axesOn(true) {
     const char* labels[] = { "U", "U'", "D", "D'", "F", "F'", "B", "B'", "R", "R'", "L", "L'" };
     int rows = 3;

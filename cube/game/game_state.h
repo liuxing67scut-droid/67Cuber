@@ -61,6 +61,7 @@ struct GameUiState {
 	RankPanel rankPanel;
 	LoginPanel loginPanel;
 	SettingsPanel settingsPanel;
+	ModeHelpPanel modeHelpPanel;
 };
 
 //游戏页内部模式

@@ -374,10 +374,17 @@ void RubikCube::drawTestAxes() {
 		line(ps.x, ps.y, pt.x, pt.y);
 
 		//文字略微偏移，避免压在线上
-		settextcolor(blended);
 		setbkmode(TRANSPARENT);
 		std::string s(1, ch);
-		outtextxy(pt.x + 8, pt.y + 8, s.c_str());
+		int textX = pt.x + 8;
+		int textY = pt.y + 8;
+		settextcolor(RGB(58, 32, 20));
+		outtextxy(textX - 1, textY, s.c_str());
+		outtextxy(textX + 1, textY, s.c_str());
+		outtextxy(textX, textY - 1, s.c_str());
+		outtextxy(textX, textY + 1, s.c_str());
+		settextcolor(blended);
+		outtextxy(textX, textY, s.c_str());
 
 		//屏幕空间构造箭头三角形
 		double dx = pt.x - ps.x;

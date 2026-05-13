@@ -178,5 +178,8 @@ void handleGameRuntimeUi(MainViewState& viewState) {
 	handleTeachPanelInteraction(viewState);
 	handleModeTabButtons(viewState);
 	drawCurrentModeTabHighlight();
+	if (g_ui.modeHelpPanel.draw(g_app.msg)) {
+		g_app.msg.uMsg = 0;
+	}
 	handleOverlayPanels();
 }

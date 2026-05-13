@@ -438,7 +438,7 @@ void handlePracticeRightDragRotation(MainViewState& viewState) {
 		return;
 	}
 
-	if (g_ui.settingsPanel.isVisible() || g_ui.rankPanel.isVisible() || !pRubikcube || isSolving || !pRubikcube->isExecuteOver()) {
+	if (g_ui.rankPanel.isVisible() || !pRubikcube || isSolving || !pRubikcube->isExecuteOver()) {
 		if (viewState.practiceRightDragActive || viewState.practiceRightDragPreviewVisible) {
 			resetPracticeRightDrag(viewState);
 		}

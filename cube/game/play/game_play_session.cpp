@@ -89,5 +89,6 @@ void switchToMode(PlayMode mode, MainViewState& viewState, const char* popupText
 	msg = {};
 	rebuildCubeForMode(mode);
 	resetRuntimeAfterCubeRebuild(viewState, true);
+	g_ui.modeHelpPanel.showForMode(mode);
 	drawPopup(popupText, 1000);
 }

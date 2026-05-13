@@ -48,6 +48,7 @@ void handleSelectPage(MainViewState& viewState) {
 		}
 		
 		currentMode = PLAY_MODE_AUTO;
+		g_ui.modeHelpPanel.showForMode(currentMode);
 		
 		if (formulaPanel.isVisible()) {
 			formulaPanel.hide();

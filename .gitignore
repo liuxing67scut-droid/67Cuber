@@ -20,6 +20,14 @@ Release/
 build/
 **/build/
 
+# Keep vendored EasyX libraries even though build output x64 folders are ignored.
+!third_party/
+!third_party/easyx/
+!third_party/easyx/lib/
+!third_party/easyx/lib/x64/
+!third_party/easyx/lib/x64/**
+third_party/easyx/_download/
+
 # Compiler/linker intermediates
 *.obj
 *.pdb
